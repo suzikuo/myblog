@@ -41,7 +41,7 @@ broadcast:
 
 # 文章配置
 # 文章太长，截断按钮文字(在需要截断的行增加此标记：<!--more-->)
-excerpt_link: more...
+excerpt_link: More...
 # 如果你嫌每篇文章手动加more标记比较麻烦，又不想在首页全文显示，可以把excerpt_all设置成true，这样首页只会显示文章归档
 excerpt_all: true
 
@@ -101,7 +101,7 @@ rss: /atom.xml
 darkmode: true
 
 # 动态背景效果: 0-关闭，1-动态线条(跟随鼠标)
-canvas_bg: 0
+canvas_bg: 1
 
 # 自定义鼠标样式，直接替换/images/mouse.cur文件
 mouse:
@@ -124,7 +124,7 @@ github:
 
 # 网易云音乐插件
 music:
-  enable: true
+  enable: false
   # 播放器尺寸类型(1：小尺寸、2：大尺寸)
   type: 1
   id: 22707008 # 网易云分享的音乐ID(更换音乐请更改此配置项)
@@ -208,7 +208,7 @@ gitalk:
 
 # 3、Twikoo(https://github.com/imaegoo/twikoo)
 twikoo:
-  enable: true
+  enable: false
   envId: #
 
 # 首页广告配置
