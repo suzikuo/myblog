@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+
+
+  <html lang="zh-CN">
+  
+
+      <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+        
+          
+                
+                      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+                      <title>
+                        
+                          django | 
+                              Hi~
+                      </title>
+  <meta name="generator" content="hexo-theme-ayer">
+                      
+                        <link rel="shortcut icon" href="/favicon.ico" />
+                         
+<link rel="stylesheet" href="/dist/main.css">
+
+                            
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+                              
+<link rel="stylesheet" href="/css/custom.css">
+
+                                
+                                  <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+                                   
+ 
+
+                                        <link rel="stylesheet"
+                                          href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css" />
+                                        <script
+                                          src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+                                        <!-- mermaid -->
+                                        
+                                            <style>
+                                              .swal2-styled.swal2-confirm {
+                                                font-size: 1.6rem;
+                                              }
+                                            </style>
+      </head>
+
+    </html>
+
+  </html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/django/django"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  django
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/12/29/python/django/django/" class="article-date">
+  <time datetime="2021-12-29T06:46:12.000Z" itemprop="datePublished">2021-12-29</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <ul>
+<li><a href="#%E4%B8%80django%E7%AE%80">一、django简</a></li>
+<li><a href="#%E4%BA%8C%E5%85%B7%E4%BD%93%E5%86%85%E5%AE%B9">二、具体内容</a></li>
+<li><a href="#3drf">3、DRF</a></li>
+</ul>
+<h2 id="一、django简"><a href="#一、django简" class="headerlink" title="一、django简"></a>一、django简</h2><p><strong>1、组件</strong></p>
+<ol>
+<li>Project：项目</li>
+<li>Apps：应用。尽量减少应用与工程、应用于应用之间的依赖关系，做到功能独立。</li>
+<li>Model：ORM。对象关系映射。</li>
+<li>URL Route：URL分配器、路由。</li>
+<li>View：视图。业务。</li>
+<li>DTL：模板语言，与jinja2相同。</li>
+<li>Admin：管理界面</li>
+<li>Cache System：缓存系统。</li>
+</ol>
+<p><strong>2、目录结构</strong><br><img src="https://img-blog.csdnimg.cn/e95d7ccfa907429a95d2f0279b0ca2a2.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br><strong>3、常用命令</strong></p>
+<ol>
+<li>新建一个 django project：<code>django-admin.py startproject project_name</code></li>
+<li>新建 app：<code>python manage.py startapp app_name</code></li>
+<li>创建数据库表 或 更改数据库表或字段：<code>python manage.py makemigrations（生成迁移文件）</code>，<code>python manage.py migrate（执行迁移）</code></li>
+<li>启动调试：<code>python manage.py runserver</code>、<code>python manage.py runserver 0.0.0.0:8000</code></li>
+<li>创建超级管理员：<code>python manage.py createsuperuser</code>、<code>python manage.py changepassword username（修改密码）</code></li>
+</ol>
+<h2 id="二、具体内容"><a href="#二、具体内容" class="headerlink" title="二、具体内容"></a>二、具体内容</h2><p> <strong>1. setting.py</strong></p>
+<p> <strong>2. 请求生命周期</strong><br><img src="https://img-blog.csdnimg.cn/bc326173c8eb43979d2782628ec0c153.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<p> <strong>3. 中间件</strong></p>
+<blockquote>
+<p>中间件是一个用来处理Django请求和响应的框架级钩子。它是一个轻量、低级别的插件系统，用于在全局范围内改变Django的输入和输出。每个中间件组件都负责做一些特定的功能。<br> <strong>3. 中间件的五种方法</strong><br> process_request : 请求进来时,权限认证<br> process_view : 路由匹配之后,能够得到视图函数<br>process_exception : 异常时执行<br>process_template_responseprocess : 模板渲染时执行<br>process_response : 请求有响应时执行</p>
+</blockquote>
+<p> <strong>4. session</strong></p>
+<blockquote>
+<p>django的session存储可以利用中间件来实现。需要在 settings.py 文件中注册APP、设置中间件用于启动。设置存储模式（数据库&#x2F;缓存&#x2F;混合存储）和配置数据库缓存用于存储，生成django_session表单用于读写。</p>
+</blockquote>
+<p> <strong>5. csrf实现机制</strong></p>
+<blockquote>
+<p>django第1次响应来自某个客户端的请求时,服务器随机产生1个token值，把这个token保存在session中;</p>
+<p>同时服务器把这个token放到cookie中交给前端页面；</p>
+<p>该客户端再次发起请求时，把这个token值加入到请求数据或者头信息中,一起传给服务器；<br>服务器校验前端请求带过来的token和session里的token是否一致。</p>
+</blockquote>
+<p> <strong>6. 缓存</strong></p>
+<blockquote>
+<ol>
+<li><strong>全站缓存，较少使用</strong></li>
+</ol>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE_CLASSES = (</span><br><span class="line">    ‘django.middleware.cache.UpdateCacheMiddleware’,  <span class="comment"># 第一</span></span><br><span class="line">    <span class="string">&#x27;django.middleware.common.CommonMiddleware&#x27;</span>,</span><br><span class="line">    ‘django.middleware.cache.FetchFromCacheMiddleware’,  <span class="comment"># 最后</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol start="2">
+<li><strong>视图缓存，用户视图函数或视图类中</strong></li>
+</ol>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.views.decorators.cache <span class="keyword">import</span> cache_page</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="meta">@cache_page(<span class="params"><span class="number">15</span></span>) </span><span class="comment">#超时时间为15秒</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>(<span class="params">request</span>):</span><br><span class="line">    t=time.time() <span class="comment">#获取当前时间</span></span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">&quot;index.html&quot;</span>,<span class="built_in">locals</span>())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>3. 模板缓存，指缓存不经常变换的模板片段</strong></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;% load cache %&#125;</span><br><span class="line">    &lt;h3 style=<span class="string">&quot;color: green&quot;</span>&gt;不缓存:-----&#123;&#123; t &#125;&#125;&lt;/h3&gt;</span><br><span class="line"></span><br><span class="line">&#123;% cache <span class="number">2</span> <span class="string">&#x27;name&#x27;</span> %&#125; <span class="comment"># 存的key</span></span><br><span class="line">    &lt;h3&gt;缓存:-----:&#123;&#123; t &#125;&#125;&lt;/h3&gt;</span><br><span class="line">&#123;% endcache %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> <strong>7. ORM操作QuerySet对象的方法</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>all()</td>
+<td>查询所有结果</td>
+</tr>
+<tr>
+<td>filter()</td>
+<td>过滤查询对象。获取不到返回None。</td>
+</tr>
+<tr>
+<td>get()</td>
+<td>返回与所给筛选条件相匹配的对象，返回结果有且只有1个。如果符合筛选条件的对象超过1个或者没有都会抛出错误。</td>
+</tr>
+<tr>
+<td>exclude()</td>
+<td>排除满足条件的对象</td>
+</tr>
+<tr>
+<td>order_by()</td>
+<td>对查询结果排序</td>
+</tr>
+<tr>
+<td>reverse()</td>
+<td>对查询结果反向排序</td>
+</tr>
+<tr>
+<td>count()</td>
+<td>返回数据库中匹配查询(QuerySet)的对象数量。</td>
+</tr>
+<tr>
+<td>first()</td>
+<td>返回第一条记录</td>
+</tr>
+<tr>
+<td>last()</td>
+<td>返回最后一条记录</td>
+</tr>
+<tr>
+<td>exists()</td>
+<td>如果QuerySet包含数据，就返回True，否则返回False</td>
+</tr>
+<tr>
+<td>values()</td>
+<td>返回包含对象具体值的字典的QuerySet</td>
+</tr>
+<tr>
+<td>values_list()</td>
+<td>与values()类似，只是返回的是元组而不是字典。</td>
+</tr>
+<tr>
+<td>distinct()</td>
+<td>对查询集去重</td>
+</tr>
+</tbody></table>
+<p><strong>django filter过滤器中支持命令参数</strong><br>__exact 精确等于 like ‘aaa’<br> __iexact 精确等于 忽略大小写 ilike ‘aaa’<br> __contains 包含 like ‘%aaa%’<br> __icontains 包含 忽略大小写 ilike ‘%aaa%’，但是对于sqlite来说，contains的作用效果等同于icontains。<br>__gt 大于<br>__gte 大于等于<br>__lt 小于<br>__lte 小于等于<br>__in 存在于一个list范围内<br>__startswith 以…开头<br>__istartswith 以…开头 忽略大小写<br>__endswith 以…结尾<br>__iendswith 以…结尾，忽略大小写<br>__range 在…范围内<br>__year 日期字段的年份<br>__month 日期字段的月份<br>__day 日期字段的日<br>__isnull&#x3D;True&#x2F;False</p>
+<p> <strong>8. Q和F</strong></p>
+<blockquote>
+<p>Q查询：对数据的多个字段联合查询（常和且或非”&amp;|~”进行联合使用）<br>F查询：对数据的不同字段进行比较（常用于比较和更新，对数据进行加减操作）</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Q案例：</span><br><span class="line">查询作者名字是猎虎或者价格大于<span class="number">5000</span>的书 -- 或</span><br><span class="line">res = models.Bbook.objects.<span class="built_in">filter</span>(Q(authors__name=<span class="string">&#x27;猎虎&#x27;</span>)|Q(price__gt=<span class="number">5000</span>))</span><br><span class="line"></span><br><span class="line">查询作者名字是猎虎并且价格大于<span class="number">5000</span>的书 -- 与 &amp;</span><br><span class="line">res = models.Bbook.objects.<span class="built_in">filter</span>(Q(authors__name=<span class="string">&#x27;猎虎&#x27;</span>,price__gt=<span class="number">5000</span>))</span><br><span class="line">查询作者名字不是猎虎的书</span><br><span class="line">res = models.Bbook.objects.<span class="built_in">filter</span>(~Q(authors__name=<span class="string">&#x27;猎虎&#x27;</span>))</span><br><span class="line"></span><br><span class="line">F案例：</span><br><span class="line">所有阅读数+<span class="number">1</span></span><br><span class="line">res = .Bbook.objects.<span class="built_in">all</span>().update(read_num=F(<span class="string">&#x27;read_num&#x27;</span>)+<span class="number">1</span>)</span><br><span class="line">查询评论数大于阅读数的书籍</span><br><span class="line">res = models.Bbook.objects.<span class="built_in">all</span>().<span class="built_in">filter</span>(commit_num__gt=F(<span class="string">&#x27;read_num&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> <strong>9. 视图响应</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> Response(&#123;content=响应体, content_type=响应体数据类型, status=状态码)</span><br><span class="line"><span class="keyword">return</span> HttpResponse(content=响应体, content_type=响应体数据类型, status=状态码) </span><br><span class="line"><span class="keyword">return</span> JsonResponse(&#123;‘city’: ‘beijing’, ‘subject’: ‘python’&#125;,status=response.status_code)</span><br><span class="line"><span class="keyword">return</span> redirect(‘/index.html’)</span><br></pre></td></tr></table></figure>
+
+<p> <strong>10. 生命周期</strong></p>
+<blockquote>
+<p>请求–&gt;wsgi–&gt;中间件–&gt;路由匹配–&gt;视图–&gt;（DRF：通过self.dispatch()反射执行对应方法（在其中进行request的封装、权限的绑定和认证：认证、权限、节流）–&gt;中间件–&gt;wsgi</p>
+</blockquote>
+<p> <strong>11. Celery</strong></p>
+<blockquote>
+<p>分布式任务队列，其本质是生产者消费者模型，生产者发送任务到消息队列，消费者负责处理任务。<br><img src="https://img-blog.csdnimg.cn/3cfba3d9849a45088bdee410a0c8ed04.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_18,color_FFFFFF,t_70,g_se,x_16"></p>
+</blockquote>
+<p> <strong>12. CBV、FBV</strong></p>
+<blockquote>
+<p>FBV（function base views） 基于函数的视图，就是在视图里使用函数处理请求。<br>CBV（class base views） 基于类的视图，就是在视图里使用类处理请求。</p>
+</blockquote>
+<p>FBV：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">&quot;login/&quot;</span>, views.login),</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render,HttpResponse</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">request</span>):</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&quot;GET&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">&quot;GET 方法&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&quot;POST&quot;</span>:</span><br><span class="line">        user = request.POST.get(<span class="string">&quot;user&quot;</span>)</span><br><span class="line">        pwd = request.POST.get(<span class="string">&quot;pwd&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> user == <span class="string">&quot;runoob&quot;</span> <span class="keyword">and</span> pwd == <span class="string">&quot;123456&quot;</span>:</span><br><span class="line">            <span class="keyword">return</span> HttpResponse(<span class="string">&quot;POST 方法&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> HttpResponse(<span class="string">&quot;POST 方法1&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>CBV：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">&quot;login/&quot;</span>, views.Login.as_view()),</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render,HttpResponse</span><br><span class="line"><span class="keyword">from</span> django.views <span class="keyword">import</span> View</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Login</span>(<span class="title class_ inherited__">View</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self,request</span>):</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">&quot;GET 方法&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">post</span>(<span class="params">self,request</span>):</span><br><span class="line">        user = request.POST.get(<span class="string">&quot;user&quot;</span>)</span><br><span class="line">        pwd = request.POST.get(<span class="string">&quot;pwd&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> user == <span class="string">&quot;runoob&quot;</span> <span class="keyword">and</span> pwd == <span class="string">&quot;123456&quot;</span>:</span><br><span class="line">            <span class="keyword">return</span> HttpResponse(<span class="string">&quot;POST 方法&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> HttpResponse(<span class="string">&quot;POST 方法 1&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p> <strong>13. 连接多数据库</strong><br> 在 settings.py 中配置需要连接的多个数据库连接串</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.sqlite3&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: os.path.join(BASE_DIR, <span class="string">&#x27;db.sqlite3&#x27;</span>),</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&#x27;ora1&#x27;</span>: &#123;   <span class="comment"># 配置第二个数据库节点名称</span></span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.oracle&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;devdb&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;hysh&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;hysh&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;192.168.191.3&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PORT&#x27;</span>: <span class="string">&#x27;1521&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DATABASE_ROUTERS = [<span class="string">&#x27;Prject.database_router.DatabaseAppsRouter&#x27;</span>]</span><br><span class="line"></span><br><span class="line">设置APP对应的数据库路由表 </span><br><span class="line">DATABASE_APPS_MAPPING = &#123;</span><br><span class="line">    <span class="comment"># example:</span></span><br><span class="line">    <span class="comment"># &#x27;app_name&#x27;:&#x27;database_name&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;report&#x27;</span>: <span class="string">&#x27;ora1&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;admin&#x27;</span>: <span class="string">&#x27;defualt&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;regs&#x27;</span>:  <span class="string">&#x27;defualt&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建数据库路由规则 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"> </span><br><span class="line">DATABASE_MAPPING = settings.DATABASE_APPS_MAPPING</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DatabaseAppsRouter</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">db_for_read</span>(<span class="params">self, model, **hints</span>):</span><br><span class="line">        <span class="keyword">if</span> model._meta.app_label <span class="keyword">in</span> DATABASE_MAPPING:</span><br><span class="line">            <span class="keyword">return</span> DATABASE_MAPPING[model._meta.app_label]</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">db_for_write</span>(<span class="params">self, model, **hints</span>):</span><br><span class="line">        <span class="keyword">if</span> model._meta.app_label <span class="keyword">in</span> DATABASE_MAPPING:</span><br><span class="line">            <span class="keyword">return</span> DATABASE_MAPPING[model._meta.app_label]</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">allow_relation</span>(<span class="params">self, obj1, obj2, **hints</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Allow any relation between apps that use the same database.&quot;&quot;&quot;</span></span><br><span class="line">        db_obj1 = DATABASE_MAPPING.get(obj1._meta.app_label)</span><br><span class="line">        db_obj2 = DATABASE_MAPPING.get(obj2._meta.app_label)</span><br><span class="line">        <span class="keyword">if</span> db_obj1 <span class="keyword">and</span> db_obj2:</span><br><span class="line">            <span class="keyword">if</span> db_obj1 == db_obj2:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">allow_syncdb</span>(<span class="params">self, db, model</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Make sure that apps only appear in the related database.&quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">if</span> db <span class="keyword">in</span> DATABASE_MAPPING.values():</span><br><span class="line">            <span class="keyword">return</span> DATABASE_MAPPING.get(model._meta.app_label) == db</span><br><span class="line">        <span class="keyword">elif</span> model._meta.app_label <span class="keyword">in</span> DATABASE_MAPPING:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">allow_migrate</span>(<span class="params">self, db, app_label, model=<span class="literal">None</span>, **hints</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Make sure the auth app only appears in the &#x27;auth_db&#x27;</span></span><br><span class="line"><span class="string">        database.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> db <span class="keyword">in</span> DATABASE_MAPPING.values():</span><br><span class="line">            <span class="keyword">return</span> DATABASE_MAPPING.get(app_label) == db</span><br><span class="line">        <span class="keyword">elif</span> app_label <span class="keyword">in</span> DATABASE_MAPPING:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<p>model</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Users</span>(models.Model):</span><br><span class="line">    name = models.CharField(max_length=<span class="number">50</span>)</span><br><span class="line">    passwd = models.CharField(max_length=<span class="number">100</span>)</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;app01 %s &quot;</span> % self.name</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Meta</span>:</span><br><span class="line">        app_label = <span class="string">&quot;app01&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>一个app使用多个数据库</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">models.User.objects.using(dbname).<span class="built_in">all</span>(） </span><br></pre></td></tr></table></figure>
+
+<h2 id="3、DRF"><a href="#3、DRF" class="headerlink" title="3、DRF"></a>3、DRF</h2><p>参考文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41500222/article/details/87895643">添加链接描述</a><br><img src="https://img-blog.csdnimg.cn/6128f9a7523f4d50acc49c39fa957d51.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_10,color_FFFFFF,t_70,g_se,x_16"><br>所有的类所多继承的父类必须是APIView<br>可继承的类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#class View(object):</span></span><br><span class="line"><span class="comment">#class APIView(View): 封装了view,并且重新封装了request,初始化了各种组件</span></span><br><span class="line"><span class="comment">#class GenericAPIView(views.APIView):</span></span><br><span class="line"><span class="comment">#1.增加了一些属性和方法,如get_queryset,get_serializer</span></span><br><span class="line"><span class="comment">#class GenericViewSet(ViewSetMixin, generics.GenericAPIView)</span></span><br><span class="line"><span class="comment">#父类ViewSetMixin 重写了as_view,返回return csrf_exempt(view)</span></span><br><span class="line"><span class="comment">#并重新设置请求方式与执行函数的关系</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ModelViewSet</span>(mixins.CreateModelMixin,</span><br><span class="line">                   mixins.RetrieveModelMixin,</span><br><span class="line">                   mixins.UpdateModelMixin,</span><br><span class="line">                   mixins.DestroyModelMixin,</span><br><span class="line">                   mixins.ListModelMixin,</span><br><span class="line">                   GenericViewSet):<span class="keyword">pass</span></span><br><span class="line"><span class="comment">#继承了mixins下的一些类,封装了list,create,update等方法</span></span><br><span class="line"><span class="comment">#和GenericViewSet</span></span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        Share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ak47dadada.top/2021/12/29/python/django/django/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/07/06/python/django/django%20DRF%20%E7%BB%84%E4%BB%B6%E8%A7%A3%E6%9E%90/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            django DRF 组件解析
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/12/28/mongodb/Given%20transaction%20number%201%20does%20not%20match%20any%20in-progress%20transactions/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Given transaction number 1 does not match any in-progress transactions</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "hrRaoWREk54yFQBambRBkxF7-gzGzoHsz",
+    app_key: "W4uJsrlZ5fWql0zSQMEDOQZN",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "留下你的足迹吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2024
+        <i class="ri-heart-fill heart_icon"></i> ZiKuo Su
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hi~"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

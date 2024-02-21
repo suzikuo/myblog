@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+
+  <html lang="zh-CN">
+  
+
+      <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+        
+          
+                
+                      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+                      <title>
+                        
+                          基于Glue ETL(提取、转换和加载)的serviceless 数据分析——二、数据清洗、转换 | 
+                              Hi~
+                      </title>
+  <meta name="generator" content="hexo-theme-ayer">
+                      
+                        <link rel="shortcut icon" href="/favicon.ico" />
+                         
+<link rel="stylesheet" href="/dist/main.css">
+
+                            
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+                              
+<link rel="stylesheet" href="/css/custom.css">
+
+                                
+                                  <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+                                   
+ 
+
+                                        <link rel="stylesheet"
+                                          href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css" />
+                                        <script
+                                          src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+                                        <!-- mermaid -->
+                                        
+                                            <style>
+                                              .swal2-styled.swal2-confirm {
+                                                font-size: 1.6rem;
+                                              }
+                                            </style>
+      </head>
+
+    </html>
+
+  </html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-aws/基于Glue ETL(提取、转换和加载)的serviceless 数据分析——二、数据清洗、转换"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  基于Glue ETL(提取、转换和加载)的serviceless 数据分析——二、数据清洗、转换
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E3%80%81%E8%BD%AC%E6%8D%A2/" class="article-date">
+  <time datetime="2024-02-21T09:19:28.171Z" itemprop="datePublished">2024-02-21</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AWS/">AWS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">4 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="二、数据清洗、转换"><a href="#二、数据清洗、转换" class="headerlink" title="二、数据清洗、转换"></a>二、数据清洗、转换</h1><p><strong>此实验使用s3作为数据源</strong></p>
+<blockquote>
+<p>ETL: </p>
+<p> E   &nbsp;&nbsp; extract  &nbsp;&nbsp;   &nbsp;&nbsp;&nbsp;&nbsp; 输入<br> T   &nbsp;&nbsp; transform &nbsp;&nbsp;&nbsp; 转换<br> L   &nbsp;&nbsp; load         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  输出</p>
+</blockquote>
+<ul>
+<li><a href="#%E4%BA%8C%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E8%BD%AC%E6%8D%A2">二、数据清洗、转换</a><ul>
+<li><a href="#%E7%AE%80%E6%98%93%E6%9E%B6%E6%9E%84%E5%9B%BE">简易架构图</a></li>
+<li><a href="#1%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97">1、数据清洗</a></li>
+<li><a href="#2%E6%95%B0%E6%8D%AE%E5%88%86%E5%8C%BA">2、数据分区</a></li>
+<li><a href="#3%E6%80%BB%E7%BB%93">3、总结</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="简易架构图"><a href="#简易架构图" class="headerlink" title="简易架构图"></a>简易架构图</h2><p><img src="https://img-blog.csdnimg.cn/72acdbce3c594d3fac88bcd9aa553b58.png"></p>
+<h2 id="1、数据清洗"><a href="#1、数据清洗" class="headerlink" title="1、数据清洗"></a>1、数据清洗</h2><p><font color=##00aa00>此步会将s3中的原始数据清洗成我们想要的自定义结构的数据。之后，我们可通过<font color="#ff0000">APIGateway+Lambda+Athena</font>来实现一个无服务器的数据分析服务。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>图例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1、入口</td>
+<td><img src="https://img-blog.csdnimg.cn/87d10ca8a11c4365af2ff9cca526eb1e.png"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2、创建Job（s3作为数据源，则Type选择Spark，若为Kinesis等，选择Stream Spark）</td>
+<td><img src="https://img-blog.csdnimg.cn/592eb7721a81429697b8f9464c6b9932.png"></td>
+</tr>
+<tr>
+<td>3、IAM角色需要有s3与Glue的权限</td>
+<td><img src="https://img-blog.csdnimg.cn/5d1800dab03542d3a8be59f093572360.png"></td>
+</tr>
+<tr>
+<td>4、选择s3脚本位置,若已经完成脚本的编写工作，则可以选择第二项或第三项，若无则Glue会提供默认脚本</td>
+<td><img src="https://img-blog.csdnimg.cn/7d812c8f9ef9488484de0b1cf174477c.png"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5、安全配置参数</td>
+<td><img src="https://img-blog.csdnimg.cn/ff3ac1ddd2764207ad665a7a2c74405a.png"><strong>建议：添加参数–enable-auto-scaling为true。每次在我们执行Job任务时，会根据运行 ETL 任务的数据处理单元（DPU）的个数来分配动态IP，在我们子网的动态IP数低于DPU数时，Job将会执行失败。此参数将会动态分配IP。</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6、数据源（）</td>
+<td><img src="https://img-blog.csdnimg.cn/96ef1ffee060463a920a7ed2e8889d56.png"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7、数据目标（我们会将清洗后的数据存储到新的s3桶）</td>
+<td><img src="https://img-blog.csdnimg.cn/14484dc005774b07afffa19a774715d3.png"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>8、设计架构（在本案例中，我们会自定义脚本。所以不再在此处设计架构）<font color="#ff0000">（此处设计后，脚本会自动生成相关代码）</font ></td>
+<td><img src="https://img-blog.csdnimg.cn/df3c0aff2534416f91f29402fb443d10.png"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>9、保存</td>
+<td><img src="https://img-blog.csdnimg.cn/cdcd23fdefe9490e8e6a3ec37a9f2eab.png"></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>编辑脚本</strong><br><font color=##FFFF00>  脚本中的args参数的键值需要从Job的安全配置参数中定义  </font> </p>
+<p><font color=##00aa00> 1. 连接数据源（s3）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#数据源</span></span><br><span class="line">datasource = glueContext.create_dynamic_frame.from_catalog(database = args[<span class="string">&#x27;db_name&#x27;</span>], table_name = tableName, transformation_ctx = <span class="string">&quot;datasource&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p> <font color=##00aa00>2. 数据结构转换</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mapped_readings = ApplyMapping.apply(frame = datasource, mappings = [(<span class="string">&quot;lclid&quot;</span>, <span class="string">&quot;string&quot;</span>, <span class="string">&quot;meter_id&quot;</span>, <span class="string">&quot;string&quot;</span>), \</span><br><span class="line">                                                                     (<span class="string">&quot;datetime&quot;</span>, <span class="string">&quot;string&quot;</span>, <span class="string">&quot;reading_time&quot;</span>, <span class="string">&quot;string&quot;</span>), \</span><br><span class="line">                                                                     (<span class="string">&quot;KWH/hh (per half hour)&quot;</span>, <span class="string">&quot;double&quot;</span>, <span class="string">&quot;reading_value&quot;</span>, <span class="string">&quot;double&quot;</span>)], \</span><br><span class="line">                                     transformation_ctx = <span class="string">&quot;mapped_readings&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p> <font color=##00aa00>3. 数据结构拆分、定义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mapped_readings_df = DynamicFrame.toDF(mapped_readings)</span><br><span class="line"></span><br><span class="line">mapped_readings_df = mapped_readings_df.withColumn(<span class="string">&quot;obis_code&quot;</span>, lit(<span class="string">&quot;&quot;</span>))</span><br><span class="line">mapped_readings_df = mapped_readings_df.withColumn(<span class="string">&quot;reading_type&quot;</span>, lit(<span class="string">&quot;INT&quot;</span>))</span><br><span class="line"></span><br><span class="line">reading_time = to_timestamp(col(<span class="string">&quot;reading_time&quot;</span>), <span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)</span><br><span class="line">mapped_readings_df = mapped_readings_df \</span><br><span class="line">    .withColumn(<span class="string">&quot;week_of_year&quot;</span>, weekofyear(reading_time)) \</span><br><span class="line">    .withColumn(<span class="string">&quot;date_str&quot;</span>, regexp_replace(col(<span class="string">&quot;reading_time&quot;</span>).substr(<span class="number">1</span>,<span class="number">10</span>), <span class="string">&quot;-&quot;</span>, <span class="string">&quot;&quot;</span>)) \</span><br><span class="line">    .withColumn(<span class="string">&quot;day_of_month&quot;</span>, dayofmonth(reading_time)) \</span><br><span class="line">    .withColumn(<span class="string">&quot;month&quot;</span>, month(reading_time)) \</span><br><span class="line">    .withColumn(<span class="string">&quot;year&quot;</span>, year(reading_time)) \</span><br><span class="line">    .withColumn(<span class="string">&quot;hour&quot;</span>, hour(reading_time)) \</span><br><span class="line">    .withColumn(<span class="string">&quot;minute&quot;</span>, minute(reading_time)) \</span><br><span class="line">    .withColumn(<span class="string">&quot;reading_date_time&quot;</span>, reading_time) \</span><br><span class="line">    .drop(<span class="string">&quot;reading_time&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><font color=##00aa00> 4. 清洗后的数据写入新s3</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># write data to S3</span></span><br><span class="line">filteredMeterReads = DynamicFrame.fromDF(mapped_readings_df, glueContext, <span class="string">&quot;filteredMeterReads&quot;</span>)</span><br><span class="line"></span><br><span class="line">s3_clean_path = <span class="string">&quot;s3://&quot;</span> + args[<span class="string">&#x27;clean_data_bucket&#x27;</span>]</span><br><span class="line"></span><br><span class="line">glueContext.write_dynamic_frame.from_options(</span><br><span class="line">    frame = filteredMeterReads,</span><br><span class="line">    connection_type = <span class="string">&quot;s3&quot;</span>,</span><br><span class="line">    connection_options = &#123;<span class="string">&quot;path&quot;</span>: s3_clean_path&#125;,</span><br><span class="line">    <span class="built_in">format</span> = <span class="string">&quot;parquet&quot;</span>,</span><br><span class="line">    transformation_ctx = <span class="string">&quot;s3CleanDatasink&quot;</span>)</span><br></pre></td></tr></table></figure>
+<br>
+
+<p><strong>运行作业</strong><br><br><br><font color="#ff0000">&nbsp;&nbsp;&nbsp;&nbsp;执行成功后，状态将变为”SUCCESS”，失败将会给出失败信息，可在CloudWatch 中查看详情</p>
+<p><img src="https://img-blog.csdnimg.cn/c8a534c6a2cf41fa9df2cdbbbb0553c5.png"></p>
+<p><img src="https://img-blog.csdnimg.cn/7786ba66e3ac430c9d0efd540a1b2bac.png"><br><br><br><font color=##00aa00>清洗后的数据保存到了s3<br><br><br><img src="https://img-blog.csdnimg.cn/d98cac38d99d4b1b82b9368c2357c98c.png"><br><strong>数据清洗完毕后，可通过上一篇中的爬网程序步骤，将清洗后的数据的结构创建表到数据目录中，<br>此时我们可以使用Athena对清洗后的数据进行分析。</strong></p>
+<h2 id="2、数据分区"><a href="#2、数据分区" class="headerlink" title="2、数据分区"></a>2、数据分区</h2><p>接下来我们对数据进行分区处理（<font color="#ff0000">此处只提供了按天分区</font>）<br>重新进行数据清洗中的创建Job操作后，重写脚本<br><strong>编辑脚本</strong><br>连接数据源。表为上一步最后重新爬取生成的新表。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cleanedMeterDataSource = glueContext.create_dynamic_frame.from_catalog(database = args[<span class="string">&#x27;db_name&#x27;</span>], table_name = tableName, transformation_ctx = <span class="string">&quot;cleanedMeterDataSource&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>根据type与data_str分区</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">business_zone_bucket_path_daily = <span class="string">&quot;s3://&#123;&#125;/daily&quot;</span>.<span class="built_in">format</span>(args[<span class="string">&#x27;business_zone_bucket&#x27;</span>])</span><br><span class="line"></span><br><span class="line">businessZone = glueContext.write_dynamic_frame.from_options(frame = cleanedMeterDataSource, \</span><br><span class="line">    connection_type = <span class="string">&quot;s3&quot;</span>, \</span><br><span class="line">    connection_options = &#123;<span class="string">&quot;path&quot;</span>: business_zone_bucket_path_daily, <span class="string">&quot;partitionKeys&quot;</span>: [<span class="string">&quot;reading_type&quot;</span>, <span class="string">&quot;date_str&quot;</span>]&#125;,\</span><br><span class="line">    <span class="built_in">format</span> = <span class="string">&quot;parquet&quot;</span>, \</span><br><span class="line">    transformation_ctx = <span class="string">&quot;businessZone&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>分区后的数据结果：<br><img src="https://img-blog.csdnimg.cn/e20989d5745042c1ba4a6cfa1b67936b.png"><br>再次创建、运行爬网程序，将会在数据目录中生成新的分区表。</p>
+<h2 id="3、总结"><a href="#3、总结" class="headerlink" title="3、总结"></a>3、总结</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;到这一步，我们已经使用Glue ETL对s3桶中的数据进行了清洗、分区操作。在进行上篇中的Athena操作后，我们已经可以通过Athena直接查询到清洗、分区后的数据集了。<br>&nbsp;&nbsp;&nbsp;&nbsp;接下来，我们会通过使用APIGateway+Lambda+Athena来构建一个无服务器的数据查询分析服务。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        Share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E3%80%81%E8%BD%AC%E6%8D%A2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ETL/" rel="tag">ETL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%B8%80%E3%80%81Glue%E5%88%9B%E5%BB%BA/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            基于Glue ETL(提取、转换和加载)的serviceless 数据分析——一、Glue创建.
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%B8%89%E3%80%81serverless%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">基于Glue ETL(提取、转换和加载)的serviceless 数据分析——三、serverless数据分析</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "hrRaoWREk54yFQBambRBkxF7-gzGzoHsz",
+    app_key: "W4uJsrlZ5fWql0zSQMEDOQZN",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "留下你的足迹吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2024
+        <i class="ri-heart-fill heart_icon"></i> ZiKuo Su
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hi~"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

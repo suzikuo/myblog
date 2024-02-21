@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+
+  <html lang="zh-CN">
+  
+
+      <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+        
+          
+                
+                      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+                      <title>
+                        
+                          Starlette 源码分析 | 
+                              Hi~
+                      </title>
+  <meta name="generator" content="hexo-theme-ayer">
+                      
+                        <link rel="shortcut icon" href="/favicon.ico" />
+                         
+<link rel="stylesheet" href="/dist/main.css">
+
+                            
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+                              
+<link rel="stylesheet" href="/css/custom.css">
+
+                                
+                                  <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+                                   
+ 
+
+                                        <link rel="stylesheet"
+                                          href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css" />
+                                        <script
+                                          src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+                                        <!-- mermaid -->
+                                        
+                                            <style>
+                                              .swal2-styled.swal2-confirm {
+                                                font-size: 1.6rem;
+                                              }
+                                            </style>
+      </head>
+
+    </html>
+
+  </html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/fastapi/Starlette 源码分析"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Starlette 源码分析
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/08/23/python/fastapi/Starlette%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="article-date">
+  <time datetime="2023-08-23T06:05:40.000Z" itemprop="datePublished">2023-08-23</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">17 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Table-of-Contents"><a href="#Table-of-Contents" class="headerlink" title="Table of Contents"></a>Table of Contents</h1><ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#1-%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">1. 服务的执行流程</a><ul>
+<li><a href="#11-%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90">1.1. 执行流程的源码分析</a><ul>
+<li><a href="#111-starlette">1.1.1. Starlette</a></li>
+<li><a href="#112-servererrormiddleware">1.1.2. ServerErrorMiddleware</a></li>
+<li><a href="#113-exceptionmiddleware">1.1.3. ExceptionMiddleware</a></li>
+<li><a href="#114-router">1.1.4. Router</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="1-服务的执行流程"><a href="#1-服务的执行流程" class="headerlink" title="1. 服务的执行流程"></a>1. 服务的执行流程</h1><p>Starlette 的执行包含 3 个流程</p>
+<ul>
+<li>服务启动时, 也就是 asgi 的 startup 事件</li>
+<li>处理用户请求时, 也就是 asgi 的 http, websocket 事件</li>
+<li>服务停止时, 也就是 asgi 的 shutdown 事件</li>
+</ul>
+<p>3 个执行流程入口都是 starlette.application.Starlette.<strong>call</strong>(scope, receive, send)</p>
+<blockquote>
+<p>starlette.application.Starlette.<strong>call</strong>(scope, receive, send)<br>–&gt; ServerErrorMiddleware<br>—-&gt; ExceptionMiddleware<br>——&gt; 自定义中间件<br>——–&gt; Router<br>———-&gt; 业务接口函数</p>
+</blockquote>
+<p>每一个中间件都是一个可调用对象, 并且接受 3 个参数,也就是 asgi 协议的三个参数: scope, receive, send.</p>
+<h2 id="1-1-执行流程的源码分析"><a href="#1-1-执行流程的源码分析" class="headerlink" title="1.1. 执行流程的源码分析"></a>1.1. 执行流程的源码分析</h2><h3 id="1-1-1-Starlette"><a href="#1-1-1-Starlette" class="headerlink" title="1.1.1. Starlette"></a>1.1.1. Starlette</h3><ul>
+<li>这一层是服务的入口, 包含三个作用, 服务启动时, asgi startup 事件的执行, 以及服务停止时 asgi shutdown<br>事件的执行, 客户端请求的处理.</li>
+<li>上面的执行流程的构建也是在这里构建的, 也就是中间件的加载</li>
+<li>服务的路由的,嵌套路由也是在这里构建</li>
+<li>服务的异常处理配置也是在这里定义的</li>
+<li>服务的 <code>startup</code> 和 <code>shutdown</code> 事件的绑定也是在这里,但是是绑定到 <code>router</code> 对象中的</li>
+</ul>
+<p>1、流程的源码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, scope: Scope, receive: Receive, send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        scope[<span class="string">&quot;app&quot;</span>] = self</span><br><span class="line">        <span class="keyword">await</span> self.middleware_stack(scope, receive, send)</span><br></pre></td></tr></table></figure>
+<p>这里可以看出他就是往 <code>scope</code> 中添加了 <code>app</code> 属性作为对象本身, 也就是说后续的调用链路中都可以通过 <code>scope</code> 拿到 <code>starlette</code> 对象.</p>
+<p>2、<strong>middleware_stack</strong><br>这里的 <code>middleware_stack</code> 是就是包含了最上面的执行流程, 有点类似于常见的多层次装饰器</p>
+<p><code>Starlette.middleware_stack</code> 属性是在 <code>Starlette</code> 对象创建时就构建了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Starlette</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">        <span class="comment"># ...</span></span></span><br><span class="line"><span class="params">        middleware: typing.<span class="type">Optional</span>[typing.<span class="type">Sequence</span>[Middleware]] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        exception_handlers: typing.<span class="type">Optional</span>[</span></span><br><span class="line"><span class="params">            typing.Mapping[</span></span><br><span class="line"><span class="params">                typing.<span class="type">Any</span>,</span></span><br><span class="line"><span class="params">                typing.<span class="type">Callable</span>[</span></span><br><span class="line"><span class="params">                    [Request, Exception],</span></span><br><span class="line"><span class="params">                    typing.<span class="type">Union</span>[Response, typing.Awaitable[Response]],</span></span><br><span class="line"><span class="params">                ],</span></span><br><span class="line"><span class="params">            ]</span></span><br><span class="line"><span class="params">        ] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        <span class="comment"># ...</span></span></span><br><span class="line"><span class="params">    </span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># ...</span></span><br><span class="line">        self.exception_handlers = (</span><br><span class="line">            &#123;&#125; <span class="keyword">if</span> exception_handlers <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="built_in">dict</span>(exception_handlers)</span><br><span class="line">        )</span><br><span class="line">        self.user_middleware = [] <span class="keyword">if</span> middleware <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="built_in">list</span>(middleware)</span><br><span class="line">        self.middleware_stack = self.build_middleware_stack()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">build_middleware_stack</span>(<span class="params">self</span>) -&gt; ASGIApp:</span><br><span class="line">        debug = self.debug</span><br><span class="line">        error_handler = <span class="literal">None</span></span><br><span class="line">        exception_handlers: typing.<span class="type">Dict</span>[</span><br><span class="line">            typing.<span class="type">Any</span>, typing.<span class="type">Callable</span>[[Request, Exception], Response]</span><br><span class="line">        ] = &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> self.exception_handlers.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> (<span class="number">500</span>, Exception):</span><br><span class="line">                error_handler = value</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                exception_handlers[key] = value</span><br><span class="line"></span><br><span class="line">        middleware = (</span><br><span class="line">            [Middleware(ServerErrorMiddleware, handler=error_handler, debug=debug)]</span><br><span class="line">            + self.user_middleware</span><br><span class="line">            + [</span><br><span class="line">                Middleware(</span><br><span class="line">                    ExceptionMiddleware, handlers=exception_handlers, debug=debug</span><br><span class="line">                )</span><br><span class="line">            ]</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        app = self.router</span><br><span class="line">        <span class="keyword">for</span> cls, options <span class="keyword">in</span> <span class="built_in">reversed</span>(middleware):</span><br><span class="line">            app = cls(app=app, **options)</span><br><span class="line">        <span class="keyword">return</span> app</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">middleware = (</span><br><span class="line">              [Middleware(ServerErrorMiddleware, handler=error_handler, debug=debug)]</span><br><span class="line">              + self.user_middleware</span><br><span class="line">              + [</span><br><span class="line">                  Middleware(</span><br><span class="line">                      ExceptionMiddleware, handlers=exception_handlers, debug=debug</span><br><span class="line">                  )</span><br><span class="line">              ]</span><br><span class="line">          )</span><br><span class="line">app = self.router</span><br><span class="line"><span class="keyword">for</span> cls, options <span class="keyword">in</span> <span class="built_in">reversed</span>(middleware):</span><br><span class="line">    app = cls(app=app, **options)</span><br><span class="line"><span class="keyword">return</span> app</span><br></pre></td></tr></table></figure>
+<p>从这里可以看出 <code>ServerErrorMiddleware</code> 是最外层的调用, 并且有个 error_handler 参数, 这个参数从上面可以看出, 如果 <code>exception_handlers</code> 字典中包含了 500 这个错误码对应的异常处理器的话, <code>ServerMiddleware</code> 在执行过程中发生错误时就会使用该函数进行处理.</p>
+<p>中间是用户自定义的中间件<br><code>ExceptionMiddleware</code> 是最内第二层, 且接受了 <code>exception_handlers</code> 参数作为其调用发生异常时的各种异常情况的处理器调用</p>
+<p><code>app = self.router</code> 才是真正的最内一层, <code>router</code> 就是一个 <code>Router</code> 对象, 包含了所有的 Route 列表(Route 就是定义的路由)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Starlette</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        debug: <span class="built_in">bool</span> = <span class="literal">False</span>,</span></span><br><span class="line"><span class="params">        routes: typing.<span class="type">Optional</span>[typing.<span class="type">Sequence</span>[BaseRoute]] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        <span class="comment"># ...</span></span></span><br><span class="line"><span class="params">    </span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># ...</span></span><br><span class="line">        self.router = Router(</span><br><span class="line">            routes, on_startup=on_startup, on_shutdown=on_shutdown, lifespan=lifespan</span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+<p><strong>Tips:</strong></p>
+<blockquote>
+<p>1、如果希望在服务启动和停止的执行过程中加入自定义的内容, 那么久可以通过中间件结合判断 <code>scope[&#39;type&#39;]==&#39;lifespan&#39;</code> 来实现; 如果是想在http 或者websocket 请求处理过程中加入自定义的内容,就可以使用中间件,并且结合<code>scope[&#39;type&#39;]==&#39;http&#39;</code> 或者 <code>&#39;websocket&#39;</code> 来实现<br>        2、如果是想在服务请求过程中抛出特定异常并且能够全局补货处理, 那么可以自定义异常类, 并且在配置该异常类对应的处理函数<br>    &#x2F;3、如果不希望使用Startlett 默认的中间件,那么可以继承子类, 并修改 <code>middlware_stack</code>, 实际上完全可以自己按照 <code>asgi</code> 协议开发一个完全自定义的框架, 只是无法使用现成的代码了</p>
+</blockquote>
+<h3 id="1-1-2-ServerErrorMiddleware"><a href="#1-1-2-ServerErrorMiddleware" class="headerlink" title="1.1.2. ServerErrorMiddleware"></a>1.1.2. ServerErrorMiddleware</h3><p>他对全局的执行流程进行异常捕获, 并且对异常进行处理.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ServerErrorMiddleware</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Handles returning 500 responses when a server error occurs.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    If &#x27;debug&#x27; is set, then traceback responses will be returned,</span></span><br><span class="line"><span class="string">    otherwise the designated &#x27;handler&#x27; will be called.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    This middleware class should generally be used to wrap *everything*</span></span><br><span class="line"><span class="string">    else up, so that unhandled exceptions anywhere in the stack</span></span><br><span class="line"><span class="string">    always result in an appropriate 500 response.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        app: ASGIApp,</span></span><br><span class="line"><span class="params">        handler: typing.<span class="type">Optional</span>[typing.<span class="type">Callable</span>] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        debug: <span class="built_in">bool</span> = <span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    </span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        self.app = app</span><br><span class="line">        self.handler = handler</span><br><span class="line">        self.debug = debug</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, scope: Scope, receive: Receive, send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> scope[<span class="string">&quot;type&quot;</span>] != <span class="string">&quot;http&quot;</span>:</span><br><span class="line">            <span class="keyword">await</span> self.app(scope, receive, send)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        response_started = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">_send</span>(<span class="params">message: Message</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">nonlocal</span> response_started, send</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> message[<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;http.response.start&quot;</span>:</span><br><span class="line">                response_started = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">await</span> send(message)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">await</span> self.app(scope, receive, _send)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</span><br><span class="line">            request = Request(scope)</span><br><span class="line">            <span class="keyword">if</span> self.debug:</span><br><span class="line">                <span class="comment"># In debug mode, return traceback responses.</span></span><br><span class="line">                response = self.debug_response(request, exc)</span><br><span class="line">            <span class="keyword">elif</span> self.handler <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="comment"># Use our default 500 error handler.</span></span><br><span class="line">                response = self.error_response(request, exc)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># Use an installed 500 error handler.</span></span><br><span class="line">                <span class="keyword">if</span> is_async_callable(self.handler):</span><br><span class="line">                    response = <span class="keyword">await</span> self.handler(request, exc)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    response = <span class="keyword">await</span> run_in_threadpool(self.handler, request, exc)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> response_started:</span><br><span class="line">                <span class="keyword">await</span> response(scope, receive, send)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># We always continue to raise the exception.</span></span><br><span class="line">            <span class="comment"># This allows servers to log the error, or allows test clients</span></span><br><span class="line">            <span class="comment"># to optionally raise the error within the test case.</span></span><br><span class="line">            <span class="keyword">raise</span> exc</span><br></pre></td></tr></table></figure>
+<p>异常捕获在 try except 处</p>
+<p>如果有异常发生时</p>
+<ul>
+<li>且当前的 <code>debug</code> 模式, 那么就会将异常的调用栈构建成网页返回给客户端 </li>
+<li>如果不是 <code>debug</code> 模式<ul>
+<li>并且 <code>handler</code> 配置了(这个 handler 是实例化 starlette 对象时传递的 <code>exception_handlers</code> 中 500 状态码对应的 handler), 那么就用这个 handler 进行处理. 这里要注意, handler 可以是协程对象也可以是普通函数, 他们都接受两个参数(request,exc) 且需要返回一个可调用对象, 该对象接受 (scope, receive, send) 三个参数 并且需要对客户端进行响应</li>
+<li>如果没有 handler 就直接使用 <code>PlainTextResponse(&quot;Internal Server Error&quot;, status_code=500)(scope, receive, send)</code> 返回给客户端, 也就是返回一个 500 的错误, 且响应体是 “Internal Server Error”</li>
+</ul>
+</li>
+</ul>
+<p> <strong>Tips:</strong> </p>
+<blockquote>
+<p>如果想要更改默认的服务器异常处理, 那么配置异常处理函数时,指定 500 状态码即可</p>
+</blockquote>
+<h3 id="1-1-3-ExceptionMiddleware"><a href="#1-1-3-ExceptionMiddleware" class="headerlink" title="1.1.3. ExceptionMiddleware"></a>1.1.3. ExceptionMiddleware</h3><p>这个异常处理事在 Router 的上一层进行的, 主要是对 Router 下层的异常进行捕获, 并且在发生异常时对特定异常进行处理了:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ExceptionMiddleware</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        app: ASGIApp,</span></span><br><span class="line"><span class="params">        handlers: typing.<span class="type">Optional</span>[</span></span><br><span class="line"><span class="params">            typing.Mapping[typing.<span class="type">Any</span>, typing.<span class="type">Callable</span>[[Request, Exception], Response]]</span></span><br><span class="line"><span class="params">        ] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        debug: <span class="built_in">bool</span> = <span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    </span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        self.app = app</span><br><span class="line">        self.debug = debug  <span class="comment"># <span class="doctag">TODO:</span> We ought to handle 404 cases if debug is set.</span></span><br><span class="line">        self._status_handlers: typing.<span class="type">Dict</span>[<span class="built_in">int</span>, typing.<span class="type">Callable</span>] = &#123;&#125;</span><br><span class="line">        self._exception_handlers: typing.<span class="type">Dict</span>[</span><br><span class="line">            typing.<span class="type">Type</span>[Exception], typing.<span class="type">Callable</span></span><br><span class="line">        ] = &#123;</span><br><span class="line">            HTTPException: self.http_exception,</span><br><span class="line">            WebSocketException: self.websocket_exception,</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> handlers <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">for</span> key, value <span class="keyword">in</span> handlers.items():</span><br><span class="line">                self.add_exception_handler(key, value)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, scope: Scope, receive: Receive, send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> scope[<span class="string">&quot;type&quot;</span>] <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&quot;http&quot;</span>, <span class="string">&quot;websocket&quot;</span>):</span><br><span class="line">            <span class="keyword">await</span> self.app(scope, receive, send)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        response_started = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">sender</span>(<span class="params">message: Message</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">nonlocal</span> response_started</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> message[<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;http.response.start&quot;</span>:</span><br><span class="line">                response_started = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">await</span> send(message)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">await</span> self.app(scope, receive, sender)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</span><br><span class="line">            handler = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(exc, HTTPException):</span><br><span class="line">                handler = self._status_handlers.get(exc.status_code)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> handler <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                handler = self._lookup_exception_handler(exc)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> handler <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">raise</span> exc</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> response_started:</span><br><span class="line">                msg = <span class="string">&quot;Caught handled exception, but response already started.&quot;</span></span><br><span class="line">                <span class="keyword">raise</span> RuntimeError(msg) <span class="keyword">from</span> exc</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> scope[<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;http&quot;</span>:</span><br><span class="line">                request = Request(scope, receive=receive)</span><br><span class="line">                <span class="keyword">if</span> is_async_callable(handler):</span><br><span class="line">                    response = <span class="keyword">await</span> handler(request, exc)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    response = <span class="keyword">await</span> run_in_threadpool(handler, request, exc)</span><br><span class="line">                <span class="keyword">await</span> response(scope, receive, sender)</span><br><span class="line">            <span class="keyword">elif</span> scope[<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;websocket&quot;</span>:</span><br><span class="line">                websocket = WebSocket(scope, receive=receive, send=send)</span><br><span class="line">                <span class="keyword">if</span> is_async_callable(handler):</span><br><span class="line">                    <span class="keyword">await</span> handler(websocket, exc)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">await</span> run_in_threadpool(handler, websocket, exc)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+<p>他本身是包含两个预置的异常处理函数的</p>
+<ul>
+<li><strong>HTTPException 对应的处理函数</strong><br>如果状态码是 204 或 304 返回 <code>Response(status_code=exc.status_code, headers=exc.headers)</code> 否则返回 <code>PlainTextResponse(exc.detail, status_code=exc.status_code, headers=exc.headers)</code></li>
+<li><strong>WebSocketException 对应的处理函数</strong><br>直接关闭 socket 连接</li>
+</ul>
+<p><strong>异常处理的过程</strong></p>
+<ul>
+<li>如果异常类型是 <code>HTTPException</code>, 那么会检查该异常对应状态码是否有对应的处理函数</li>
+<li>如果没有 Http 异常对应的处理函数, 就根据 异常类型 再次检查该异常类型是否有对应的处理函数.</li>
+<li>如果都没有找到异常处理函数就会抛出异常. 该异常会由上一层的 <code>ServerErrorMiddleware</code> 捕获处理<br><strong>Tips:</strong></li>
+</ul>
+<blockquote>
+<p>请求处理过程中,如果想要直接返回HTTP 错误, 可以在代码中抛出HTTPExcption 异常, 但是要注意,一般HTTPException 的状态码应该是 400 以上</p>
+</blockquote>
+<h3 id="1-1-4-Router"><a href="#1-1-4-Router" class="headerlink" title="1.1.4. Router"></a>1.1.4. Router</h3><p>Router 有两个作用</p>
+<ul>
+<li>匹配客户端请求的路径找对对应的业务处理函数</li>
+<li>asgi <code>startup</code> 和 <code>shutdown</code> 的执行</li>
+</ul>
+<p><strong>1、startup 和 shutdown 部分</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, scope: Scope, receive: Receive,</span></span><br><span class="line"><span class="params">                   send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    The main entry point to the Router class.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> scope[<span class="string">&quot;type&quot;</span>] <span class="keyword">in</span> (<span class="string">&quot;http&quot;</span>, <span class="string">&quot;websocket&quot;</span>, <span class="string">&quot;lifespan&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;router&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> scope:</span><br><span class="line">        scope[<span class="string">&quot;router&quot;</span>] = self</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> scope[<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;lifespan&quot;</span>:</span><br><span class="line">        <span class="keyword">await</span> self.lifespan(scope, receive, send)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">lifespan</span>(<span class="params">self, scope: Scope, receive: Receive,</span></span><br><span class="line"><span class="params">                   send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Handle ASGI lifespan messages, which allows us to manage application</span></span><br><span class="line"><span class="string">    startup and shutdown events.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    started = <span class="literal">False</span></span><br><span class="line">    app = scope.get(<span class="string">&quot;app&quot;</span>)</span><br><span class="line">    <span class="keyword">await</span> receive()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> self.lifespan_context(app):</span><br><span class="line">            <span class="keyword">await</span> send(&#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;lifespan.startup.complete&quot;</span>&#125;)</span><br><span class="line">            started = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">await</span> receive()</span><br><span class="line">    <span class="keyword">except</span> BaseException:</span><br><span class="line">        exc_text = traceback.format_exc()</span><br><span class="line">        <span class="keyword">if</span> started:</span><br><span class="line">            <span class="keyword">await</span> send(&#123;</span><br><span class="line">                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;lifespan.shutdown.failed&quot;</span>,</span><br><span class="line">                <span class="string">&quot;message&quot;</span>: exc_text</span><br><span class="line">            &#125;)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">await</span> send(&#123;</span><br><span class="line">                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;lifespan.startup.failed&quot;</span>,</span><br><span class="line">                <span class="string">&quot;message&quot;</span>: exc_text</span><br><span class="line">            &#125;)</span><br><span class="line">        <span class="keyword">raise</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">await</span> send(&#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;lifespan.shutdown.complete&quot;</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>如果实例化 Starlette 时传递的没有传递 lifespan ,那么会使用默认的 <code>lifespan</code>, 也就是使用调用 Router 对象的 startup 和 shutdown 执行存储的 <code>on_startup</code> 列表中的函数 和 <code>on_shutdown</code> 列表中的函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">startup</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Run any `.on_startup` event handlers.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> handler <span class="keyword">in</span> self.on_startup:</span><br><span class="line">            <span class="keyword">if</span> is_async_callable(handler):</span><br><span class="line">                <span class="keyword">await</span> handler()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                handler()</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">shutdown</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Run any `.on_shutdown` event handlers.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> handler <span class="keyword">in</span> self.on_shutdown:</span><br><span class="line">            <span class="keyword">if</span> is_async_callable(handler):</span><br><span class="line">                <span class="keyword">await</span> handler()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                handler()</span><br></pre></td></tr></table></figure>
+<p><strong>2、路由匹配和执行</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, scope: Scope, receive: Receive,</span></span><br><span class="line"><span class="params">                    send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">     <span class="comment"># ....</span></span><br><span class="line"></span><br><span class="line">     partial = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">     <span class="keyword">for</span> route <span class="keyword">in</span> self.routes:</span><br><span class="line">         <span class="comment"># Determine if any route matches the incoming scope,</span></span><br><span class="line">         <span class="comment"># and hand over to the matching route if found.</span></span><br><span class="line">         <span class="keyword">match</span>, child_scope = route.matches(scope)</span><br><span class="line">         <span class="keyword">if</span> <span class="keyword">match</span> == Match.FULL:</span><br><span class="line">             scope.update(child_scope)</span><br><span class="line">             <span class="keyword">await</span> route.handle(scope, receive, send)</span><br><span class="line">             <span class="keyword">return</span></span><br><span class="line">         <span class="keyword">elif</span> <span class="keyword">match</span> == Match.PARTIAL <span class="keyword">and</span> partial <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">             partial = route</span><br><span class="line">             partial_scope = child_scope</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> partial <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">         <span class="comment">#  Handle partial matches. These are cases where an endpoint is</span></span><br><span class="line">         <span class="comment"># able to handle the request, but is not a preferred option.</span></span><br><span class="line">         <span class="comment"># We use this in particular to deal with &quot;405 Method Not Allowed&quot;.</span></span><br><span class="line">         scope.update(partial_scope)</span><br><span class="line">         <span class="keyword">await</span> partial.handle(scope, receive, send)</span><br><span class="line">         <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> scope[<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;http&quot;</span> <span class="keyword">and</span> self.redirect_slashes <span class="keyword">and</span> scope[</span><br><span class="line">             <span class="string">&quot;path&quot;</span>] != <span class="string">&quot;/&quot;</span>:</span><br><span class="line">         redirect_scope = <span class="built_in">dict</span>(scope)</span><br><span class="line">         <span class="keyword">if</span> scope[<span class="string">&quot;path&quot;</span>].endswith(<span class="string">&quot;/&quot;</span>):</span><br><span class="line">             redirect_scope[<span class="string">&quot;path&quot;</span>] = redirect_scope[<span class="string">&quot;path&quot;</span>].rstrip(<span class="string">&quot;/&quot;</span>)</span><br><span class="line">         <span class="keyword">else</span>:</span><br><span class="line">             redirect_scope[<span class="string">&quot;path&quot;</span>] = redirect_scope[<span class="string">&quot;path&quot;</span>] + <span class="string">&quot;/&quot;</span></span><br><span class="line"></span><br><span class="line">         <span class="keyword">for</span> route <span class="keyword">in</span> self.routes:</span><br><span class="line">             <span class="keyword">match</span>, child_scope = route.matches(redirect_scope)</span><br><span class="line">             <span class="keyword">if</span> <span class="keyword">match</span> != Match.NONE:</span><br><span class="line">                 redirect_url = URL(scope=redirect_scope)</span><br><span class="line">                 response = RedirectResponse(url=<span class="built_in">str</span>(redirect_url))</span><br><span class="line">                 <span class="keyword">await</span> response(scope, receive, send)</span><br><span class="line">                 <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">     <span class="keyword">await</span> self.default(scope, receive, send)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">partial = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> route <span class="keyword">in</span> self.routes:</span><br><span class="line">    <span class="comment"># Determine if any route matches the incoming scope,</span></span><br><span class="line">    <span class="comment"># and hand over to the matching route if found.</span></span><br><span class="line">    <span class="keyword">match</span>, child_scope = route.matches(scope)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">match</span> == Match.FULL:</span><br><span class="line">        scope.update(child_scope)</span><br><span class="line">        <span class="keyword">await</span> route.handle(scope, receive, send)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="keyword">match</span> == Match.PARTIAL <span class="keyword">and</span> partial <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        partial = route</span><br><span class="line">        partial_scope = child_scope</span><br></pre></td></tr></table></figure>
+<p>这里就是路由匹配的核心代码了, 遍历 Router 中的元素, 调用其 <code>matches</code> 方法进行匹配, 如果完全匹配了就调用该元素的 <code>handle</code> 方法, 传递(scope, receive, send) 给他, 然后就结束调用流程了<br><strong>Tips:</strong> </p>
+<p>这里可以看出, 只要定义的 Route 对象具有 matches 方法 和 handle 方法就可以完成最基本路由匹配与执行, 所以完全可以自定义 Route 类型, 比如自定义一些嵌套的路由, 实际上 starlette 的 Mount 就是 <code>Route 的变体</code></p>
+<p>接下来看一下 Route 对象的<code>mathces</code> 和 <code>handle</code> 方法<br><strong>1、matches</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">matches</span>(<span class="params">self, scope: Scope</span>) -&gt; typing.<span class="type">Tuple</span>[Match, Scope]:</span><br><span class="line">    <span class="keyword">if</span> scope[<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;http&quot;</span>:</span><br><span class="line">        <span class="keyword">match</span> = self.path_regex.<span class="keyword">match</span>(scope[<span class="string">&quot;path&quot;</span>])</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">            matched_params = <span class="keyword">match</span>.groupdict()</span><br><span class="line">            <span class="keyword">for</span> key, value <span class="keyword">in</span> matched_params.items():</span><br><span class="line">                matched_params[key] = self.param_convertors[key].convert(</span><br><span class="line">                    value)</span><br><span class="line">            path_params = <span class="built_in">dict</span>(scope.get(<span class="string">&quot;path_params&quot;</span>, &#123;&#125;))</span><br><span class="line">            path_params.update(matched_params)</span><br><span class="line">            child_scope = &#123;</span><br><span class="line">                <span class="string">&quot;endpoint&quot;</span>: self.endpoint,</span><br><span class="line">                <span class="string">&quot;path_params&quot;</span>: path_params</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> self.methods <span class="keyword">and</span> scope[<span class="string">&quot;method&quot;</span>] <span class="keyword">not</span> <span class="keyword">in</span> self.methods:</span><br><span class="line">                <span class="keyword">return</span> Match.PARTIAL, child_scope</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> Match.FULL, child_scope</span><br><span class="line">    <span class="keyword">return</span> Match.NONE, &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p><code>self.path_regex.match(scope[&quot;path&quot;])</code> 这一行是通过正则表达去匹配当前请求的路径, 这个正则表达式是在Route对象创建时构建的, 代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">CONVERTOR_TYPES = &#123;</span><br><span class="line">    <span class="string">&quot;str&quot;</span>: StringConvertor(),</span><br><span class="line">    <span class="string">&quot;path&quot;</span>: PathConvertor(),</span><br><span class="line">    <span class="string">&quot;int&quot;</span>: IntegerConvertor(),</span><br><span class="line">    <span class="string">&quot;float&quot;</span>: FloatConvertor(),</span><br><span class="line">    <span class="string">&quot;uuid&quot;</span>: UUIDConvertor(),</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line">PARAM_REGEX = re.<span class="built_in">compile</span>(<span class="string">&quot;&#123;([a-zA-Z_][a-zA-Z0-9_]*)(:[a-zA-Z_][a-zA-Z0-9_]*)?&#125;&quot;</span>)</span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="keyword">for</span> <span class="keyword">match</span> <span class="keyword">in</span> PARAM_REGEX.finditer(path):</span><br><span class="line">        param_name, convertor_type = <span class="keyword">match</span>.groups(<span class="string">&quot;str&quot;</span>)</span><br><span class="line">        convertor_type = convertor_type.lstrip(<span class="string">&quot;:&quot;</span>)</span><br><span class="line">        <span class="keyword">assert</span> (</span><br><span class="line">            convertor_type</span><br><span class="line">            <span class="keyword">in</span> CONVERTOR_TYPES), <span class="string">f&quot;Unknown path convertor &#x27;<span class="subst">&#123;convertor_type&#125;</span>&#x27;&quot;</span></span><br><span class="line">        convertor = CONVERTOR_TYPES[convertor_type]</span><br><span class="line">        path_regex += re.escape(path[idx:<span class="keyword">match</span>.start()])</span><br><span class="line">        path_regex += <span class="string">f&quot;(?P&lt;<span class="subst">&#123;param_name&#125;</span>&gt;<span class="subst">&#123;convertor.regex&#125;</span>)&quot;</span></span><br><span class="line"><span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+<p>如果匹配到了, 那么检查是否有路径参数, 如果有路径参数, 那么提取出路径参数, 并且对路径参数进行格式转换 <code>self.param_convertors[key].convert(value)</code><br><strong>Tips:</strong><br>路由参数进行格式转换是可以自定义的, 只要参考 <code>starlette.converters</code> 下的 <code>Converter</code> 类, 并且将其添加到 <code>CONVERTOR_TYPES</code> 中既可以</p>
+<p><strong>2、handle</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">handle</span>(<span class="params">self, scope: Scope, receive: Receive, send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    <span class="keyword">if</span> self.methods <span class="keyword">and</span> scope[<span class="string">&quot;method&quot;</span>] <span class="keyword">not</span> <span class="keyword">in</span> self.methods:</span><br><span class="line">        headers = &#123;<span class="string">&quot;Allow&quot;</span>: <span class="string">&quot;, &quot;</span>.join(self.methods)&#125;</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;app&quot;</span> <span class="keyword">in</span> scope:</span><br><span class="line">            <span class="keyword">raise</span> HTTPException(status_code=<span class="number">405</span>, headers=headers)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            response = PlainTextResponse(<span class="string">&quot;Method Not Allowed&quot;</span>,</span><br><span class="line">                                         status_code=<span class="number">405</span>,</span><br><span class="line">                                         headers=headers)</span><br><span class="line">        <span class="keyword">await</span> response(scope, receive, send)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">await</span> self.app(scope, receive, send)</span><br></pre></td></tr></table></figure>
+<p>这里先判断请求方法是否在方法列表中, 如果不再直接抛出 <strong>405 Http</strong> 异常</p>
+<p>否则调用 <code>Route.app(scope,receive,send)</code> 那么这里关键的代码就是 app 这个属性中了, 看一下属性的内容</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">request_response</span>(<span class="params">func: typing.<span class="type">Callable</span></span>) -&gt; ASGIApp:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Takes a function or coroutine `func(request) -&gt; response`,</span></span><br><span class="line"><span class="string">    and returns an ASGI application.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    is_coroutine = is_async_callable(func)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">app</span>(<span class="params">scope: Scope, receive: Receive, send: Send</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        request = Request(scope, receive=receive, send=send)</span><br><span class="line">        <span class="keyword">if</span> is_coroutine:</span><br><span class="line">            response = <span class="keyword">await</span> func(request)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            response = <span class="keyword">await</span> run_in_threadpool(func, request)</span><br><span class="line">        <span class="keyword">await</span> response(scope, receive, send)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> app</span><br><span class="line"></span><br><span class="line"><span class="comment"># ....</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">    <span class="comment"># ...</span></span></span><br><span class="line"><span class="params">    endpoint: typing.<span class="type">Callable</span>,</span></span><br><span class="line"><span class="params">    <span class="comment"># ...</span></span></span><br><span class="line"><span class="params"></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">    self.endpoint = endpoint</span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">    <span class="keyword">if</span> inspect.isfunction(endpoint_handler) <span class="keyword">or</span> inspect.ismethod(</span><br><span class="line">            endpoint_handler):</span><br><span class="line">        <span class="comment"># Endpoint is function or method. Treat it as `func(request) -&gt; response`.</span></span><br><span class="line">        self.app = request_response(endpoint)</span><br><span class="line">        <span class="keyword">if</span> methods <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            methods = [<span class="string">&quot;GET&quot;</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># Endpoint is a class. Treat it as ASGI.</span></span><br><span class="line">        self.app = endpoint</span><br><span class="line">    <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+<p>如果 <code>endpoint(也就是我们的视图函数)</code> 是函数对着方法, 那么就通过 <code>request_response</code> 包装一层, 执行的时候就是:</p>
+<ul>
+<li>如果是携程对象, 就直接 await</li>
+<li>如果是普通函数, 就再线程池中执行</li>
+</ul>
+<p><strong>Tips:</strong> 如果不是函数或者方法, 就把它当做一个普通类, 从代码中看出, 这个<code>endpoint</code> 类的实例化时应当接受(scope,receive,send)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Endp</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__new__</span>(<span class="params">cls, scope, receive, send, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Endpx</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, scope, receive, send</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__await__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> 可等待对象</span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        Share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ak47dadada.top/2023/08/23/python/fastapi/Starlette%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fastapi/" rel="tag">fastapi</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2024/01/18/network/OSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%92%8CTCP_IP%E5%9B%9B%E5%B1%82(%E4%BA%94%E5%B1%82)%E6%A8%A1%E5%9E%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            OSI七层模型和TCP_IP四层(五层)模型知识汇总
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/08/23/python/fastapi/fastapi%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">fastapi源码流程图</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "hrRaoWREk54yFQBambRBkxF7-gzGzoHsz",
+    app_key: "W4uJsrlZ5fWql0zSQMEDOQZN",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "留下你的足迹吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2024
+        <i class="ri-heart-fill heart_icon"></i> ZiKuo Su
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hi~"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+
+  <html lang="zh-CN">
+  
+
+      <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+        
+          
+                
+                      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+                      <title>
+                        
+                          django DRF 组件解析 | 
+                              Hi~
+                      </title>
+  <meta name="generator" content="hexo-theme-ayer">
+                      
+                        <link rel="shortcut icon" href="/favicon.ico" />
+                         
+<link rel="stylesheet" href="/dist/main.css">
+
+                            
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+                              
+<link rel="stylesheet" href="/css/custom.css">
+
+                                
+                                  <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+                                   
+ 
+
+                                        <link rel="stylesheet"
+                                          href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css" />
+                                        <script
+                                          src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+                                        <!-- mermaid -->
+                                        
+                                            <style>
+                                              .swal2-styled.swal2-confirm {
+                                                font-size: 1.6rem;
+                                              }
+                                            </style>
+      </head>
+
+    </html>
+
+  </html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/django/django DRF 组件解析"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  django DRF 组件解析
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/06/python/django/django%20DRF%20%E7%BB%84%E4%BB%B6%E8%A7%A3%E6%9E%90/" class="article-date">
+  <time datetime="2022-07-06T08:09:58.000Z" itemprop="datePublished">2022-07-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">931</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">3 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <ul>
+<li><a href="#%E4%B8%80%E8%AE%A4%E8%AF%81">一、认证</a><br>    - <a href="#1%E5%9C%A8class%E7%B1%BB%E9%87%8C%E9%9D%A2%E7%9A%84apiview%E5%9C%A8pycharm%E6%8C%89%E4%BD%8Fctrl%E7%82%B9%E5%87%BBapiview%E7%84%B6%E5%90%8E%E5%90%91%E4%B8%8B%E7%BF%BB%E6%89%BE%E5%88%B0">1、在class类里面的(APIView)在pycharm按住ctrl点击APIView,然后向下翻找到</a></li>
+<li><a href="#%E4%BA%8C%E6%9D%83%E9%99%90">二、权限</a></li>
+<li><a href="#%E4%B8%89%E9%99%90%E6%B5%81">三、限流</a></li>
+<li><a href="#%E5%9B%9B%E7%89%88%E6%9C%AC">四、版本</a></li>
+<li><a href="#%E4%BA%94%E8%A7%A3%E6%9E%90%E5%99%A8parser">五、解析器(parser)</a></li>
+<li><a href="#%E5%85%AD%E5%BA%8F%E5%88%97%E5%8C%96%E5%99%A8">六、序列化器</a></li>
+</ul>
+<h1 id="一、认证"><a href="#一、认证" class="headerlink" title="一、认证"></a>一、认证</h1><h6 id="1、在class类里面的-APIView-在pycharm按住ctrl点击APIView-然后向下翻找到"><a href="#1、在class类里面的-APIView-在pycharm按住ctrl点击APIView-然后向下翻找到" class="headerlink" title="1、在class类里面的(APIView)在pycharm按住ctrl点击APIView,然后向下翻找到"></a>1、在class类里面的(APIView)在pycharm按住ctrl点击APIView,然后向下翻找到<img src="https://img-blog.csdnimg.cn/5403b26c0ae04508b95d196d35a9cc52.png"></h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">dispatch</span>(<span class="params">self, request, *args, **kwargs</span>):</span><br><span class="line">   <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">   `.dispatch()` is pretty much the same as Django&#x27;s regular dispatch,</span></span><br><span class="line"><span class="string">   but with extra hooks for startup, finalize, and exception handling.</span></span><br><span class="line"><span class="string">   &quot;&quot;&quot;</span></span><br><span class="line">   self.args = args</span><br><span class="line">   self.kwargs = kwargs</span><br><span class="line">   request = self.initialize_request(request, *args, **kwargs)</span><br><span class="line">   self.request = request</span><br><span class="line">   self.headers = self.default_response_headers  <span class="comment"># deprecate?</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="keyword">try</span>:</span><br><span class="line">       <span class="comment">#进这里 #点击这个</span></span><br><span class="line">       self.initial(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">       <span class="comment"># Get the appropriate handler method</span></span><br><span class="line">       <span class="keyword">if</span> request.method.lower() <span class="keyword">in</span> self.http_method_names:</span><br><span class="line">           handler = <span class="built_in">getattr</span>(self, request.method.lower(),</span><br><span class="line">                             self.http_method_not_allowed)</span><br><span class="line">       <span class="keyword">else</span>:</span><br><span class="line">           handler = self.http_method_not_allowed</span><br><span class="line"></span><br><span class="line">       response = handler(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">   <span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</span><br><span class="line">       response = self.handle_exception(exc)</span><br><span class="line"></span><br><span class="line">   self.response = self.finalize_response(request, response, *args, **kwargs)</span><br><span class="line">   <span class="keyword">return</span> self.response</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>找到def dispatch(self, request, *args, **kwargs):中的 self.initial并点击</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">   <span class="comment">#进这里 #点击这个</span></span><br><span class="line">   self.initial(request, *args, **kwargs)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>然后将会看到:<br><img src="https://img-blog.csdnimg.cn/84e34c7cd6284716bacf8f0f2d8f5f16.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 代表 认证组件</span></span><br><span class="line">self.perform_authentication(request)</span><br><span class="line"><span class="comment"># 代表 权限组件</span></span><br><span class="line">      self.check_permissions(request)</span><br><span class="line">      <span class="comment"># 代表 限流组件</span></span><br><span class="line">      self.check_throttles(request)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>然后 点击self.perform_authentication(request)这个方法<br><img src="https://img-blog.csdnimg.cn/9613fb4c0e714b4cb3011c9af6ac7699.png"><br>在这里它封装了 request.user方法 点击request.user然后选择第三个<br><img src="https://img-blog.csdnimg.cn/93f394b960de45d7a35add1d49f3af59.png"><br>在这里封装了self._authenticate() 点击self._authenticate()<br><img src="https://img-blog.csdnimg.cn/8a62770a3ce24b68892b25ddc848c276.png"><br><img src="https://img-blog.csdnimg.cn/d20aa51fec7b4aee87d6fb67e2273322.png"></p>
+<h1 id="二、权限"><a href="#二、权限" class="headerlink" title="二、权限"></a>二、权限</h1><p>首先点击 self.dispatch() 找到 self.initial(request,*args,**kwargs)点击 进入<br><img src="https://img-blog.csdnimg.cn/499dd6473f124ca0bdb899bd55af156f.png"><br><img src="https://img-blog.csdnimg.cn/571886f93a3a410596e0ff2ed4c7361f.png"><br>然后点击 代表权限的组件方法<br>这里会出现 点击这个选择第三个 会出现我们冲的的方法<br><img src="https://img-blog.csdnimg.cn/a712f7b30ea34c338390d8b86f13ac90.png"><br>随后滚动鼠标 会出现这个方法<br><img src="https://img-blog.csdnimg.cn/bb51397df03648eea823fe042b0d39c2.png"><br>我们在settings.py设置全局组件配置 权限 首先我们要找到源码来写入 这个配置的功能<br>在class类里面的(APIView)在pycharm按住ctrl点击APIView,然后向下翻找到<br><img src="https://img-blog.csdnimg.cn/65143158615b42678bcaf912caf87427.png"><br>DEFAULT_PERMISSION_CLASSES 这个就代表配置 settings.py需要设置的方法 [这里写的是方法类的路径]<br><img src="https://img-blog.csdnimg.cn/45d14baa1abd4e6e9274e2b94623dd45.png"><br>然后在view.py订单视图中 写入</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OrderView</span>(<span class="title class_ inherited__">APIView</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    订单相关业务</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    authentication_classes = []</span><br><span class="line">    permission_classes = []</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="三、限流"><a href="#三、限流" class="headerlink" title="三、限流"></a>三、限流</h1><p>限流就是限制访问频率或者次数<br>我们可以看看源码是怎样写的<br>首先点击 self.dispatch() 找到 self.initial(request,*args,**kwargs)点击 进入<br><img src="https://img-blog.csdnimg.cn/375ca3e8195949a39bd7c30ce94d3bd5.png"><br>然后点击 代表限流的组件方法<br><img src="https://img-blog.csdnimg.cn/bbce45e5fb7a4b08a897cf53058af5ec.png"><br>在这里会找到封装的allow_request 点击它 选择第三个<br><img src="https://img-blog.csdnimg.cn/087fbb0c6b624ad9a1bf297851dac5df.png"><br>这里就会出现allow_request源码的方法 和 wait源码的方法<br><img src="https://img-blog.csdnimg.cn/895ba1f17ff748908555278f0bb4aa9a.png"><br><img src="https://img-blog.csdnimg.cn/359bb67fb2f04749aca3221c34f24ff3.png"><br>我们开始在views.py设置 一个类来测试我们书写的代码逻辑是否正确</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在我的组件包导入 MyThrottle方法</span></span><br><span class="line"><span class="keyword">from</span> myapp.myutils.throttle <span class="keyword">import</span> MyThrottle</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">StudentView</span>(<span class="title class_ inherited__">APIView</span>):</span><br><span class="line">    authentication_classes = [MyAuthtication]</span><br><span class="line">    permission_classes = [SVIPPermission]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 开启这个代表自己设置的限流</span></span><br><span class="line">    throttle_classes = [MyThrottle]</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self, request, *args, **kwargs</span>):</span><br><span class="line">    	<span class="comment"># 获取当前的ip</span></span><br><span class="line">        ip = request.META.get(<span class="string">&#x27;REMOTE_ADDR&#x27;</span>)</span><br><span class="line">        <span class="comment"># 并返回当前的ip</span></span><br><span class="line">        <span class="keyword">return</span> JsonResponse(&#123;<span class="string">&#x27;ip&#x27;</span>: ip&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>也可以在settings.py全局设置组件<br><img src="https://img-blog.csdnimg.cn/fd4699b9405a4eca8a296ce554482636.png"><br>怎么找到它呢 ?<br>在class类里面的(APIView)在pycharm按住ctrl点击APIView,然后向下翻找到<br><img src="https://img-blog.csdnimg.cn/ec6a94e9a8e545c69dbbb96da3eb94a2.png"><br>settings.py全局设置<br><img src="https://img-blog.csdnimg.cn/3f614336c28d4461b3d6dfaeb384d19e.png"><br><img src="https://img-blog.csdnimg.cn/898dbb4b9345407eaf023f0ea32a4203.png"><br>找到这个 这里是相关的一些配置<br><img src="https://img-blog.csdnimg.cn/aff0e7adced549aab4e996cdf23c475d.png"><br><img src="https://img-blog.csdnimg.cn/5129927f84c047099a2fb408c324a165.png"><br>这个是使用的方法<br><img src="https://img-blog.csdnimg.cn/98543b932bcd4f4d9b55a00a30b8250c.png"></p>
+<h1 id="四、版本"><a href="#四、版本" class="headerlink" title="四、版本"></a>四、版本</h1><p><img src="https://img-blog.csdnimg.cn/a7b2c04f28ce43dd8734995e3782dfd8.png"><br>一种是原生的源码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># QueryParameterVersioning点击这个里面会有个这种方法</span></span><br><span class="line"><span class="keyword">from</span> rest_framework.versioning <span class="keyword">import</span> QueryParameterVersioning</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>点击这个<br><img src="https://img-blog.csdnimg.cn/0fbd44d53f6a462ba712072512fb4fe4.png"><br><img src="https://img-blog.csdnimg.cn/beb4571440ff4799b079a591aa9d1804.png"><br>含义<br><img src="https://img-blog.csdnimg.cn/b29f826a623b4d7fa1077c95089b723a.png"><br><img src="https://img-blog.csdnimg.cn/64c9d5af7bb34b468e9cf99bac4ebcd0.png"><br><img src="https://img-blog.csdnimg.cn/4207f1b293454c6b82ba8a468bdaf2aa.png"><br>点击这个选择第三个<br><img src="https://img-blog.csdnimg.cn/bb831c44ff724d31b1ea575d7be2bfc8.png"><br><img src="https://img-blog.csdnimg.cn/e0849f7ffbad4f28a6ed0266417c3d80.png"><br><img src="https://img-blog.csdnimg.cn/05cfe6d2d1ff485f9c9e15498e62de3e.png"><br>复制这个到settings.py进行全局配置<br><img src="https://img-blog.csdnimg.cn/5dcef4b8c0534d29bb114587d84d3705.png"><br><img src="https://img-blog.csdnimg.cn/ece96aa6de4f40ad9da748f981e8af5b.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    <span class="string">&quot;DEFAULT_VERSION&quot;</span>: <span class="string">&quot;v1&quot;</span>,<span class="comment"># 默认版本</span></span><br><span class="line">    <span class="string">&quot;ALLOWED_VERSIONS&quot;</span>: [<span class="string">&quot;v1&quot;</span>, <span class="string">&quot;v2&quot;</span>],<span class="comment"># 被允许访问的版本</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>另一种方法</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从rest_framework.versioning 导入 URLPathVersioning</span></span><br><span class="line"><span class="keyword">from</span> rest_framework.versioning <span class="keyword">import</span> URLPathVersioning</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设计一个类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UsersView</span>(<span class="title class_ inherited__">APIView</span>):</span><br><span class="line">    versioning_class = URLPathVersioning  <span class="comment"># 调入版本这个方法</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self, request, *args, **kwargs</span>):</span><br><span class="line">    	<span class="comment"># 获取版本</span></span><br><span class="line">        v = request.version</span><br><span class="line">        u1 = request.versioning_scheme.reverse(viewname=<span class="string">&quot;user&quot;</span>,request=request)</span><br><span class="line">        <span class="built_in">print</span>(u1)</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(v)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>点击这个URLPathVersioning看源码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.versioning <span class="keyword">import</span> URLPathVersioning</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>继承的是这个方法点击<br><img src="https://img-blog.csdnimg.cn/3186f2e59f5c46fa89a1eebed780115a.png"><br>鼠标滚动找到复制这个 放到urls.py路由中<br><img src="https://img-blog.csdnimg.cn/17530b78373445519333e717515a2c39.png"></p>
+<h1 id="五、解析器-parser"><a href="#五、解析器-parser" class="headerlink" title="五、解析器(parser)"></a>五、解析器(parser)</h1><p><img src="https://img-blog.csdnimg.cn/3c4ca87c6e574be98832f3c0a1c70b19.png"><br><img src="https://img-blog.csdnimg.cn/a6d8ebc87e894252ad30b5aa60068e4f.png"><br><img src="https://img-blog.csdnimg.cn/578cf07560fa46c28007c3e7381446d8.png"><br><img src="https://img-blog.csdnimg.cn/e8880570969140869140bf85a0835947.png"><br><img src="https://img-blog.csdnimg.cn/4f97d50d6c4448319f40b9c845a2f22a.png"><br><img src="https://img-blog.csdnimg.cn/33180d1749ac4c1ab0281536e83301d2.png"><br><img src="https://img-blog.csdnimg.cn/0755a098866947c2a59589cdadcd4db8.png"><br><img src="https://img-blog.csdnimg.cn/2d15592a688344df96d6d2987b4c1576.png"><br><img src="https://img-blog.csdnimg.cn/2b47b76026d74b57b932d8be04b85410.png"></p>
+<h1 id="六、序列化器"><a href="#六、序列化器" class="headerlink" title="六、序列化器"></a>六、序列化器</h1><p><img src="https://img-blog.csdnimg.cn/3db1268561f44eb8b9f3de2b9be77fd7.png"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        Share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ak47dadada.top/2022/07/06/python/django/django%20DRF%20%E7%BB%84%E4%BB%B6%E8%A7%A3%E6%9E%90/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/25/aws/Glue%E8%BF%9E%E6%8E%A5RedShift%E7%9A%84%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%BB%88%E7%AB%AF%E8%8A%82%E7%82%B9/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Glue连接RedShift的前置条件：创建终端节点
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/12/29/python/django/django/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">django</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "hrRaoWREk54yFQBambRBkxF7-gzGzoHsz",
+    app_key: "W4uJsrlZ5fWql0zSQMEDOQZN",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "留下你的足迹吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2024
+        <i class="ri-heart-fill heart_icon"></i> ZiKuo Su
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hi~"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

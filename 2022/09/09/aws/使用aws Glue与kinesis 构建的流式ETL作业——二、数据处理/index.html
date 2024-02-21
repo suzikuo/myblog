@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+
+
+  <html lang="zh-CN">
+  
+
+      <head>
+        <meta charset="utf-8" />
+        <meta name="referrer" content="no-referrer">
+        
+          
+                
+                      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+                      <title>
+                        
+                          使用aws Glue与kinesis 构建的流式ETL作业——二、数据处理 | 
+                              Hi~
+                      </title>
+  <meta name="generator" content="hexo-theme-ayer">
+                      
+                        <link rel="shortcut icon" href="/favicon.ico" />
+                         
+<link rel="stylesheet" href="/dist/main.css">
+
+                            
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+                              
+<link rel="stylesheet" href="/css/custom.css">
+
+                                
+                                  <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+                                   
+ 
+
+                                        <link rel="stylesheet"
+                                          href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css" />
+                                        <script
+                                          src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+                                        <!-- mermaid -->
+                                        
+                                            <style>
+                                              .swal2-styled.swal2-confirm {
+                                                font-size: 1.6rem;
+                                              }
+                                            </style>
+      </head>
+
+    </html>
+
+  </html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-aws/使用aws Glue与kinesis 构建的流式ETL作业——二、数据处理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  使用aws Glue与kinesis 构建的流式ETL作业——二、数据处理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/09/aws/%E4%BD%BF%E7%94%A8aws%20Glue%E4%B8%8Ekinesis%20%E6%9E%84%E5%BB%BA%E7%9A%84%E6%B5%81%E5%BC%8FETL%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2022-09-09T10:50:24.000Z" itemprop="datePublished">2022-09-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AWS/">AWS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">10 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="二、数据处理"><a href="#二、数据处理" class="headerlink" title="二、数据处理"></a>二、数据处理</h1><ul>
+<li><a href="#%E4%BA%8C%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86">二、数据处理</a><ul>
+<li><a href="#21%E7%AE%80%E6%98%93%E6%9E%B6%E6%9E%84">2.1、简易架构</a></li>
+<li><a href="#22glue%E8%BF%9E%E6%8E%A5%E5%88%9B%E5%BB%BA">2.2、Glue连接创建</a><ul>
+<li><a href="#221-%E5%88%9B%E5%BB%BAredshift%E8%BF%9E%E6%8E%A5">2.2.1、 创建RedShift连接</a></li>
+<li><a href="#222%E5%88%9B%E5%BB%BArds%E8%BF%9E%E6%8E%A5%E4%BB%A5pg%E4%B8%BA%E4%BE%8B">2.2.2、创建RDS连接（以PG为例）</a></li>
+</ul>
+</li>
+<li><a href="#23glue-job%E5%88%9B%E5%BB%BA">2.3、Glue Job创建</a></li>
+<li><a href="#24%E7%BC%96%E5%86%99%E8%84%9A%E6%9C%AC">2.4、编写脚本</a><ul>
+<li><a href="#241-%E4%BB%A5redshift%E4%B8%BA%E4%BE%8B">2.4.1 、以RedShift为例</a></li>
+<li><a href="#242%E4%BB%A5pg%E4%B8%BA%E4%BE%8B">2.4.2、以PG为例</a></li>
+</ul>
+</li>
+<li><a href="#25%E8%BF%90%E8%A1%8C%E8%84%9A%E6%9C%AC">2.5、运行脚本</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="2-1、简易架构"><a href="#2-1、简易架构" class="headerlink" title="2.1、简易架构"></a>2.1、简易架构</h2><p><img src="https://img-blog.csdnimg.cn/1360fcc5a85c48fba2cfef007dce92b1.png"></p>
+<h2 id="2-2、Glue连接创建"><a href="#2-2、Glue连接创建" class="headerlink" title="2.2、Glue连接创建"></a>2.2、Glue连接创建</h2><p><font color="#f00">此处提供了RedShift和PG数据库的连接创建过程，请自行选择。</p>
+<h3 id="2-2-1、-创建RedShift连接"><a href="#2-2-1、-创建RedShift连接" class="headerlink" title="2.2.1、 创建RedShift连接"></a>2.2.1、 创建RedShift连接</h3><p><font color="#f0f">前置条件：需要有一台RedShift实例<br>此处跳过了RedShift的创建过程，RedShift需要创建一个终端节点，请看：<a target="_blank" rel="noopener" href="https://blog.csdn.net/wmjf1/article/details/126530492">Glue连接RedShift的前置条件：创建终端节点</a></font><br>由于Glue Job 在运行的时候，是在独立的服务器上，因此不能直接访问到私有子网中的服务，所以，借助Glue连接，可以使得Job在运行时连接AWS服务。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>图例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1、创建连接</td>
+<td><img src="https://img-blog.csdnimg.cn/43353ccf477b41d2a5e4cd10e6eea4fc.png"></td>
+</tr>
+<tr>
+<td>2、输入连接名称，连接类型选择“Amazon Redshift”</td>
+<td><img src="https://img-blog.csdnimg.cn/676b4df68dac41bcb5a2f9a184a63021.png"></td>
+</tr>
+<tr>
+<td>3、选择RedShift集群，输入配置的用户名密码</td>
+<td><img src="https://img-blog.csdnimg.cn/682c8589dedf412b97fb990fc07f39a1.png"></td>
+</tr>
+<tr>
+<td>4、审核</td>
+<td><img src="https://img-blog.csdnimg.cn/50a16f85b6444b91b6cc0c549388d20d.png"></td>
+</tr>
+<tr>
+<td>5、测试连接</td>
+<td><img src="https://img-blog.csdnimg.cn/be7eedf8d9a945b3a161e63554fc635c.png"></td>
+</tr>
+</tbody></table>
+<h3 id="2-2-2、创建RDS连接（以PG为例）"><a href="#2-2-2、创建RDS连接（以PG为例）" class="headerlink" title="2.2.2、创建RDS连接（以PG为例）"></a>2.2.2、创建RDS连接（以PG为例）</h3><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>图例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1、入口</td>
+<td><img src="https://img-blog.csdnimg.cn/43353ccf477b41d2a5e4cd10e6eea4fc.png#pic_center"></td>
+</tr>
+<tr>
+<td>2 、输入连接名称，连接类型选择“JDBC”</td>
+<td><img src="https://img-blog.csdnimg.cn/41d23a3d24e04269a3496861298a817e.png"></td>
+</tr>
+<tr>
+<td>3、输入连接PG的JDBC，语法请看<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/glue/latest/dg/console-connections.html?icmpid=docs_glue_console">使用连接</a>，输入用户名密码，VPC和子网需要选择PG的VPC和子网。并且至少一个选定的安全组必须为所有 TCP 端口指定自引用入站规则</td>
+<td><img src="https://img-blog.csdnimg.cn/ad9087765a3647f9aec6a12bf4e45040.png"></td>
+</tr>
+<tr>
+<td>4、检查无误后完成</td>
+<td><img src="https://img-blog.csdnimg.cn/9095d97e2fb54fc7add4f014137e76d9.png"></td>
+</tr>
+</tbody></table>
+<h2 id="2-3、Glue-Job创建"><a href="#2-3、Glue-Job创建" class="headerlink" title="2.3、Glue Job创建"></a>2.3、Glue Job创建</h2><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>图例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1、入口</td>
+<td><img src="https://img-blog.csdnimg.cn/73f19ad73e6c4e18830167fcab22b33e.png"></td>
+</tr>
+<tr>
+<td>2、若要在Job中引入其他python包，请在安全配置里面添加作业参数：<font color="#f00">–additional-python-modules：SQLAlchemy&#x3D;&#x3D; 1.3.16,psycopg2-binary&#x3D;&#x3D;2.8.5(值请自定义)</font></td>
+<td><img src="https://img-blog.csdnimg.cn/2a25505a0afa4fbe94210c96686b533f.png"></td>
+</tr>
+<tr>
+<td>3</td>
+<td><img src="https://img-blog.csdnimg.cn/e405270af37445f2a1de655735a735d9.png"></td>
+</tr>
+</tbody></table>
+<h2 id="2-4、编写脚本"><a href="#2-4、编写脚本" class="headerlink" title="2.4、编写脚本"></a>2.4、编写脚本</h2><h4 id="2-4-1-、以RedShift为例"><a href="#2-4-1-、以RedShift为例" class="headerlink" title="2.4.1 、以RedShift为例"></a>2.4.1 、以RedShift为例</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> boto3</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> DataFrame, Row</span><br><span class="line"><span class="keyword">from</span> pyspark.context <span class="keyword">import</span> SparkContext</span><br><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> awsglue.transforms <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> awsglue.utils <span class="keyword">import</span> getResolvedOptions</span><br><span class="line"><span class="keyword">from</span> awsglue.context <span class="keyword">import</span> GlueContext</span><br><span class="line"><span class="keyword">from</span> awsglue.job <span class="keyword">import</span> Job</span><br><span class="line"><span class="keyword">from</span> awsglue <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">args = getResolvedOptions(sys.argv, [<span class="string">&#x27;TempDir&#x27;</span>,<span class="string">&#x27;JOB_NAME&#x27;</span>])</span><br><span class="line"></span><br><span class="line">sc = SparkContext()</span><br><span class="line">glueContext = GlueContext(sc)</span><br><span class="line">spark = glueContext.spark_session</span><br><span class="line">job = Job(glueContext)</span><br><span class="line">job.init(args[<span class="string">&#x27;JOB_NAME&#x27;</span>], args)</span><br><span class="line">sourceData = glueContext.create_data_frame.from_catalog( \</span><br><span class="line">    database = <span class="string">&quot;【你的数据库名称】&quot;</span>, \ </span><br><span class="line">    table_name = <span class="string">&quot;【表的名称】&quot;</span>, \</span><br><span class="line">    transformation_ctx = <span class="string">&quot;datasource0&quot;</span>, \</span><br><span class="line">    additional_options = &#123;<span class="string">&quot;startingPosition&quot;</span>: <span class="string">&quot;TRIM_HORIZON&quot;</span>, <span class="string">&quot;inferSchema&quot;</span>: <span class="string">&quot;true&quot;</span>&#125;)</span><br><span class="line">    </span><br><span class="line">LINCAN_SHARE_PAGE = <span class="string">&quot;lincan_share_page&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">share_page_dot = [</span><br><span class="line">    (<span class="string">&quot;url&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;url&quot;</span>,<span class="string">&quot;string&quot;</span>),</span><br><span class="line">    (<span class="string">&quot;ip&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;ip&quot;</span>,<span class="string">&quot;string&quot;</span>),</span><br><span class="line">    (<span class="string">&quot;country&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;country&quot;</span>,<span class="string">&quot;string&quot;</span>),</span><br><span class="line">    (<span class="string">&quot;city&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;city&quot;</span>,<span class="string">&quot;string&quot;</span>),</span><br><span class="line">    (<span class="string">&quot;user_id&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;user_id&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;dot_type&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;dot_type&quot;</span>,<span class="string">&quot;string&quot;</span>), </span><br><span class="line">    (<span class="string">&quot;header&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;header&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;header_appname&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;header_appname&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;header_ismobile&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;header_ismobile&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;header_appversion&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;header_appversion&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;header_useragent&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;header_useragent&quot;</span>,<span class="string">&quot;string&quot;</span>),</span><br><span class="line">    (<span class="string">&quot;content&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;content&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;content_url&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;content_url&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;content_index&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;content_index&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;content_title&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;content_title&quot;</span>,<span class="string">&quot;string&quot;</span>),  </span><br><span class="line">    (<span class="string">&quot;create_time&quot;</span>,<span class="string">&quot;string&quot;</span>,<span class="string">&quot;create_time&quot;</span>,<span class="string">&quot;timestamp&quot;</span>)</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_connect</span>(<span class="params">table</span>):</span><br><span class="line">    connection_options = &#123;</span><br><span class="line">        <span class="string">&quot;url&quot;</span>: <span class="string">&quot;jdbc:redshift://【RedShift终端节点】:5439/dev&quot;</span>,</span><br><span class="line">        <span class="string">&quot;user&quot;</span>: <span class="string">&quot;【RedShift用户名】&quot;</span>,</span><br><span class="line">        <span class="string">&#x27;database&#x27;</span>: <span class="string">&#x27;【数据库】&#x27;</span>, </span><br><span class="line">        <span class="string">&quot;password&quot;</span>: <span class="string">&quot;【密码】&quot;</span>,</span><br><span class="line">        <span class="string">&quot;dbtable&quot;</span>:table,</span><br><span class="line">        <span class="string">&quot;redshiftTmpDir&quot;</span>:  args[<span class="string">&quot;TempDir&quot;</span>]</span><br><span class="line">        &#125; </span><br><span class="line">    <span class="keyword">return</span> connection_options</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Handle</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,dynamic_frame</span>):</span><br><span class="line">        self._time_now = datetime.datetime.utcnow().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">        self.dynamic_frame = dynamic_frame</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">raise</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SharePageDot</span>(<span class="title class_ inherited__">Handle</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;start share_page dot&quot;</span>)</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">handle</span>(<span class="params">rec</span>):</span><br><span class="line">            message = <span class="built_in">eval</span>(rec[<span class="string">&quot;logEvents.val.message&quot;</span>])</span><br><span class="line">            message[<span class="string">&quot;header_appname&quot;</span>] = message[<span class="string">&quot;header&quot;</span>][<span class="string">&quot;appName&quot;</span>]</span><br><span class="line">            message[<span class="string">&quot;header_ismobile&quot;</span>] = message[<span class="string">&quot;header&quot;</span>][<span class="string">&quot;isMobile&quot;</span>]</span><br><span class="line">            message[<span class="string">&quot;header_appversion&quot;</span>] = message[<span class="string">&quot;header&quot;</span>][<span class="string">&quot;appVersion&quot;</span>]</span><br><span class="line">            message[<span class="string">&quot;header_useragent&quot;</span>] = message[<span class="string">&quot;header&quot;</span>][<span class="string">&quot;userAgent&quot;</span>]</span><br><span class="line">            message[<span class="string">&quot;header&quot;</span>] = json.dumps(message[<span class="string">&quot;header&quot;</span>])</span><br><span class="line">            </span><br><span class="line">            message[<span class="string">&quot;content_url&quot;</span>] = message[<span class="string">&quot;content&quot;</span>][<span class="string">&quot;url&quot;</span>]</span><br><span class="line">            message[<span class="string">&quot;content_index&quot;</span>] = message[<span class="string">&quot;content&quot;</span>][<span class="string">&quot;index&quot;</span>]</span><br><span class="line">            message[<span class="string">&quot;content_title&quot;</span>] = message[<span class="string">&quot;content&quot;</span>][<span class="string">&quot;title&quot;</span>]</span><br><span class="line">            message[<span class="string">&quot;content&quot;</span>] = json.dumps(message[<span class="string">&quot;content&quot;</span>])</span><br><span class="line">            message[<span class="string">&quot;create_time&quot;</span>] = datetime.datetime.utcnow().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">            <span class="comment"># message[&quot;create_time&quot;] = time.time()</span></span><br><span class="line">            <span class="keyword">return</span> message</span><br><span class="line">        self.dynamic_frame.printSchema()</span><br><span class="line">        mapped_dyF =  Map.apply(frame = self.dynamic_frame, f = handle)</span><br><span class="line">        mapped_dyF.printSchema()</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> mapped_dyF:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        applymapping0 = ApplyMapping.apply(frame = mapped_dyF, mappings = share_page_dot, transformation_ctx = <span class="string">&quot;applymapping0&quot;</span>)</span><br><span class="line">        datasink1 = glueContext.write_dynamic_frame.from_jdbc_conf(frame = applymapping0, catalog_connection = <span class="string">&quot;redshift&quot;</span>, connection_options = get_connect(<span class="string">&quot;share_page_dot&quot;</span>),redshift_tmp_dir= args[<span class="string">&quot;TempDir&quot;</span>], transformation_ctx=<span class="string">&quot;datasink1&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;end share_page dot&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">processBatch</span>(<span class="params">data_frame, batchId</span>):</span><br><span class="line">    <span class="keyword">if</span> (data_frame.count() &gt; <span class="number">0</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;start&quot;</span>)</span><br><span class="line">        logEvents = DynamicFrame.fromDF(data_frame, glueContext, <span class="string">&quot;from_data_frame&quot;</span>).select_fields(<span class="string">&quot;logEvents&quot;</span>)</span><br><span class="line">        dyf_relationize  = logEvents.relationalize(<span class="string">&quot;logEvents&quot;</span>,args[<span class="string">&quot;TempDir&quot;</span>]+<span class="string">&quot;/relationalize&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        dyf_selectFromCollection = SelectFromCollection.apply(dyf_relationize, <span class="string">&#x27;logEvents_logEvents&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 筛选</span></span><br><span class="line">        sac_or_mon_dyF = Filter.apply(frame = dyf_selectFromCollection, f = <span class="keyword">lambda</span> x: x[<span class="string">&quot;logEvents.val.id&quot;</span>]!=<span class="string">&quot;&quot;</span>)</span><br><span class="line">        <span class="comment"># page dot</span></span><br><span class="line">        page_dot = Filter.apply(frame = sac_or_mon_dyF, f = <span class="keyword">lambda</span> x: <span class="built_in">eval</span>(x[<span class="string">&quot;logEvents.val.message&quot;</span>])[<span class="string">&quot;dot_type&quot;</span>]==LINCAN_PAGE_DOT)</span><br><span class="line">        <span class="comment"># active dot</span></span><br><span class="line">        active_dot = Filter.apply(frame = sac_or_mon_dyF, f = <span class="keyword">lambda</span> x: <span class="built_in">eval</span>(x[<span class="string">&quot;logEvents.val.message&quot;</span>])[<span class="string">&quot;dot_type&quot;</span>]==LINCAN_ACTIVE_DOT)</span><br><span class="line">        <span class="comment"># share page dot</span></span><br><span class="line">        share_page = Filter.apply(frame = sac_or_mon_dyF, f = <span class="keyword">lambda</span> x: <span class="built_in">eval</span>(x[<span class="string">&quot;logEvents.val.message&quot;</span>])[<span class="string">&quot;dot_type&quot;</span>]==LINCAN_SHARE_PAGE)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#if page_dot.count()&gt;0 :</span></span><br><span class="line">        <span class="comment">#    PageDot(page_dot).run()</span></span><br><span class="line">        <span class="comment">#if active_dot.count()&gt;0:</span></span><br><span class="line">         <span class="comment">#   ActiveDot(active_dot).run()</span></span><br><span class="line">        <span class="keyword">if</span> share_page.count()&gt;<span class="number">0</span>:</span><br><span class="line">            SharePageDot(share_page).run()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;end&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">glueContext.forEachBatch(frame = sourceData, batch_function = processBatch, options = &#123;<span class="string">&quot;windowSize&quot;</span>: <span class="string">&quot;100 seconds&quot;</span>,  <span class="string">&quot;checkpointLocation&quot;</span>: args[<span class="string">&quot;TempDir&quot;</span>] + <span class="string">&quot;/checkpoint/&quot;</span>&#125;)</span><br><span class="line">job.commit()</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-2、以PG为例"><a href="#2-4-2、以PG为例" class="headerlink" title="2.4.2、以PG为例"></a>2.4.2、以PG为例</h4><p>说明：在此脚本中，引入了python其他的包。写入PG使用的是sqlalchemy，是为了实现有则更新，无则写入的操作。若无特殊要求，可参考 “2.4.1”</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> boto3</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> DataFrame, Row</span><br><span class="line"><span class="keyword">from</span> pyspark.context <span class="keyword">import</span> SparkContext</span><br><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> awsglue.transforms <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> awsglue.utils <span class="keyword">import</span> getResolvedOptions</span><br><span class="line"><span class="keyword">from</span> awsglue.context <span class="keyword">import</span> GlueContext</span><br><span class="line"><span class="keyword">from</span> awsglue.job <span class="keyword">import</span> Job</span><br><span class="line"><span class="keyword">from</span> awsglue <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> boto3</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> sqlalchemy</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.ext.automap <span class="keyword">import</span> automap_base</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.orm <span class="keyword">import</span> sessionmaker</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.dialects.postgresql <span class="keyword">import</span> insert</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.dialects <span class="keyword">import</span> postgresql</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line">args = getResolvedOptions(sys.argv, [<span class="string">&#x27;TempDir&#x27;</span>, <span class="string">&#x27;JOB_NAME&#x27;</span>])</span><br><span class="line"></span><br><span class="line">sc = SparkContext()</span><br><span class="line">glueContext = GlueContext(sc)</span><br><span class="line">spark = glueContext.spark_session</span><br><span class="line">job = Job(glueContext)</span><br><span class="line">job.init(args[<span class="string">&#x27;JOB_NAME&#x27;</span>], args)</span><br><span class="line"></span><br><span class="line">sourceData = glueContext.create_data_frame.from_catalog( \</span><br><span class="line">    database = <span class="string">&quot;【你的数据库名称】&quot;</span>, \ </span><br><span class="line">    table_name = <span class="string">&quot;【表的名称】&quot;</span>, \</span><br><span class="line">    transformation_ctx = <span class="string">&quot;datasource0&quot;</span>, \</span><br><span class="line">    additional_options = &#123;<span class="string">&quot;startingPosition&quot;</span>: <span class="string">&quot;TRIM_HORIZON&quot;</span>, <span class="string">&quot;inferSchema&quot;</span>: <span class="string">&quot;true&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DBWrite</span>:</span><br><span class="line">    url = <span class="string">&#x27;postgresql+psycopg2://【user+passsword@PG终端节点】:5432/crowd&#x27;</span></span><br><span class="line">    base = <span class="literal">None</span></span><br><span class="line">    session = <span class="literal">None</span></span><br><span class="line">    engine = <span class="literal">None</span></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">execute</span>(<span class="params">cls</span>):</span><br><span class="line"></span><br><span class="line">        cls.engine = sqlalchemy.create_engine(cls.url)</span><br><span class="line">        metadata = sqlalchemy.schema.MetaData(bind=cls.engine)</span><br><span class="line">        metadata.reflect(cls.engine, schema=<span class="string">&quot;public&quot;</span>)</span><br><span class="line">        cls.base = automap_base(metadata=metadata)</span><br><span class="line">        cls.base.prepare()</span><br><span class="line">        cls.session = sessionmaker(bind=cls.engine)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">DBWrite.execute()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">processBatch</span>(<span class="params">data_frame, batchId</span>):</span><br><span class="line">    <span class="keyword">if</span> (data_frame.count() &gt; <span class="number">0</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;start&quot;</span>,<span class="built_in">str</span>(datetime.datetime.now()))</span><br><span class="line">        session = DBWrite.session()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">save_to_pg</span>(<span class="params">row</span>):</span><br><span class="line">            row = json.loads(row)</span><br><span class="line">            insert_data = &#123;</span><br><span class="line">                <span class="string">&quot;create_time&quot;</span>: row[<span class="string">&quot;create_time&quot;</span>],</span><br><span class="line">                <span class="string">&quot;update_time&quot;</span>: row[<span class="string">&quot;update_time&quot;</span>],</span><br><span class="line">                <span class="string">&quot;valid&quot;</span>: <span class="literal">True</span>,</span><br><span class="line">                <span class="string">&quot;crowd_type&quot;</span>: row[<span class="string">&quot;crowd_type&quot;</span>],</span><br><span class="line">                <span class="string">&quot;name&quot;</span>: row[<span class="string">&quot;name&quot;</span>],</span><br><span class="line">                <span class="string">&quot;support_num&quot;</span>: row[<span class="string">&quot;support_num&quot;</span>],</span><br><span class="line">                <span class="string">&quot;target_amount&quot;</span>: row[<span class="string">&quot;target_amount&quot;</span>],</span><br><span class="line">                <span class="string">&quot;status&quot;</span>: row[<span class="string">&quot;status&quot;</span>],</span><br><span class="line">                <span class="string">&quot;surplus_day&quot;</span>: row[<span class="string">&quot;surplus_day&quot;</span>],</span><br><span class="line">                <span class="string">&quot;crowd_category&quot;</span>: row[<span class="string">&quot;crowd_category&quot;</span>],</span><br><span class="line">                <span class="string">&quot;current_amount&quot;</span>: row[<span class="string">&quot;current_amount&quot;</span>],</span><br><span class="line">                <span class="string">&quot;address&quot;</span>: row[<span class="string">&quot;address&quot;</span>],</span><br><span class="line">                <span class="string">&quot;author&quot;</span>: row[<span class="string">&quot;author&quot;</span>],</span><br><span class="line">                <span class="string">&quot;image&quot;</span>: row[<span class="string">&quot;image&quot;</span>],</span><br><span class="line">                <span class="string">&quot;comment_num&quot;</span>: row[<span class="string">&quot;comment_num&quot;</span>],</span><br><span class="line">                <span class="string">&quot;create_data&quot;</span>: row[<span class="string">&quot;create_time&quot;</span>][:-<span class="number">9</span>],</span><br><span class="line">                <span class="string">&quot;unique_key&quot;</span>:row[<span class="string">&quot;unique_key&quot;</span>]</span><br><span class="line">            &#125;</span><br><span class="line">            update_data = copy.deepcopy(insert_data)</span><br><span class="line">            <span class="keyword">del</span> update_data[<span class="string">&quot;create_time&quot;</span>]</span><br><span class="line">            <span class="keyword">del</span> update_data[<span class="string">&quot;create_data&quot;</span>]</span><br><span class="line">            </span><br><span class="line">            Crowd = DBWrite.base.classes.crowd_crowd</span><br><span class="line">            insert_stmt = insert(Crowd).values(**insert_data)</span><br><span class="line">            insert_stmt = insert_stmt.on_conflict_do_update(</span><br><span class="line">                index_elements=[<span class="string">&quot;unique_key&quot;</span>],</span><br><span class="line">                set_=update_data</span><br><span class="line">            )</span><br><span class="line">            session.execute(insert_stmt)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">handle</span>(<span class="params">rec</span>):</span><br><span class="line">            message = rec[<span class="string">&quot;logEvents.val.message&quot;</span>]</span><br><span class="line">            index = message.find(<span class="string">&quot;|312F14DS|&quot;</span>)</span><br><span class="line">            message = message[index+<span class="number">10</span>:]</span><br><span class="line">            message = message.replace(</span><br><span class="line">                <span class="string">&quot;: true&quot;</span>, <span class="string">&quot;: True&quot;</span>).replace(<span class="string">&quot;: false&quot;</span>, <span class="string">&quot;: False&quot;</span>)</span><br><span class="line">            message = <span class="built_in">eval</span>(message)</span><br><span class="line">            <span class="keyword">return</span> message</span><br><span class="line"></span><br><span class="line">        logEvents = DynamicFrame.fromDF(</span><br><span class="line">            data_frame, glueContext, <span class="string">&quot;from_data_frame&quot;</span>).select_fields(<span class="string">&quot;logEvents&quot;</span>)</span><br><span class="line">        dyf_relationize = logEvents.relationalize(</span><br><span class="line">            <span class="string">&quot;logEvents&quot;</span>, args[<span class="string">&quot;TempDir&quot;</span>]+<span class="string">&quot;/relationalize&quot;</span>)</span><br><span class="line"></span><br><span class="line">        dyf_selectFromCollection = SelectFromCollection.apply(</span><br><span class="line">            dyf_relationize, <span class="string">&#x27;logEvents_logEvents&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 筛选</span></span><br><span class="line">        sac_or_mon_dyF = Filter.apply(</span><br><span class="line">            frame=dyf_selectFromCollection, f=<span class="keyword">lambda</span> x: x[<span class="string">&quot;logEvents.val.id&quot;</span>] != <span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">        mapped_dyF = Map.apply(frame=sac_or_mon_dyF, f=handle)</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">        mapped_dyF = mapped_dyF.toDF()</span><br><span class="line">        <span class="keyword">for</span> info <span class="keyword">in</span> (mapped_dyF.toJSON().take(mapped_dyF.toJSON().count()+<span class="number">1</span>)):</span><br><span class="line">            save_to_pg(info)</span><br><span class="line">        session.commit()</span><br><span class="line">        session.close()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;end&quot;</span>,<span class="built_in">str</span>(datetime.datetime.now()))</span><br><span class="line"></span><br><span class="line">glueContext.forEachBatch(frame=sourceData, batch_function=processBatch, options=&#123;</span><br><span class="line">                         <span class="string">&quot;windowSize&quot;</span>: <span class="string">&quot;100 seconds&quot;</span>,  <span class="string">&quot;checkpointLocation&quot;</span>: args[<span class="string">&quot;TempDir&quot;</span>] + <span class="string">&quot;/checkpoint/&quot;</span>&#125;)</span><br><span class="line">job.commit()</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-5、运行脚本"><a href="#2-5、运行脚本" class="headerlink" title="2.5、运行脚本"></a>2.5、运行脚本</h2><p>我们创建的是<font color="#f00">Spark Stream</font> 类型的Job，因此Job会<font color="#f0f">一直运行</font>，定时的从Kinesis Data Stream中获取数据进行微批量处理。<br><img src="https://img-blog.csdnimg.cn/09c1487b49764afca320df30a1782662.png"><br><img src="https://img-blog.csdnimg.cn/ecc5aa4348c74894a95b727a516b577c.png"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        Share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ak47dadada.top/2022/09/09/aws/%E4%BD%BF%E7%94%A8aws%20Glue%E4%B8%8Ekinesis%20%E6%9E%84%E5%BB%BA%E7%9A%84%E6%B5%81%E5%BC%8FETL%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ETL/" rel="tag">ETL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/02/16/python/django/%E5%9C%A8Django%E6%A8%A1%E5%9E%8B%E4%B8%AD%EF%BC%8C%E5%B0%86CharField%E6%9B%B4%E6%94%B9%E4%B8%BAArrayField/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            在Django模型中，将CharField更改为ArrayField
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/09/09/aws/%E4%BD%BF%E7%94%A8aws%20Glue%E4%B8%8Ekinesis%20%E6%9E%84%E5%BB%BA%E7%9A%84%E6%B5%81%E5%BC%8FETL%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%B8%80%E3%80%81%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E9%87%87%E9%9B%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">使用aws Glue与kinesis 构建的流式ETL作业——一、数据实时采集</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "hrRaoWREk54yFQBambRBkxF7-gzGzoHsz",
+    app_key: "W4uJsrlZ5fWql0zSQMEDOQZN",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "留下你的足迹吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2024
+        <i class="ri-heart-fill heart_icon"></i> ZiKuo Su
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hi~"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
