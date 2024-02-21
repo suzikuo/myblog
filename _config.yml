@@ -101,7 +101,10 @@ theme: ayer
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/suzikuo/myblog.git
+  branch: master
+  message: ''
 # hexo-generator-searchdb
 search:
   path: search.xml
