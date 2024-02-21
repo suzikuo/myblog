@@ -103,7 +103,7 @@ theme: ayer
 deploy:
   type: git
   repo: https://github.com/suzikuo/myblog.git
-  branch: master
+  branch: public
   message: ''
 # hexo-generator-searchdb
 search:
