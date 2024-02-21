@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Hi~</title>
+  
+  
+  <link href="https://ak47dadada.top/atom.xml" rel="self"/>
+  
+  <link href="https://ak47dadada.top/"/>
+  <updated>2024-02-21T09:33:30.420Z</updated>
+  <id>https://ak47dadada.top/</id>
+  
+  <author>
+    <name>ZiKuo Su</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于Glue ETL(提取、转换和加载)的serviceless 数据分析——一、Glue创建.</title>
+    <link href="https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%B8%80%E3%80%81Glue%E5%88%9B%E5%BB%BA/"/>
+    <id>https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%B8%80%E3%80%81Glue%E5%88%9B%E5%BB%BA/</id>
+    <published>2024-02-21T09:19:28.301Z</published>
+    <updated>2024-02-21T09:33:30.420Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;一、通过Athena查询s3中的数据&quot;&gt;&lt;a href=&quot;#一、通过Athena查询s3中的数据&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    <category term="ETL" scheme="https://ak47dadada.top/tags/ETL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于Glue ETL(提取、转换和加载)的serviceless 数据分析——二、数据清洗、转换</title>
+    <link href="https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E3%80%81%E8%BD%AC%E6%8D%A2/"/>
+    <id>https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E3%80%81%E8%BD%AC%E6%8D%A2/</id>
+    <published>2024-02-21T09:19:28.171Z</published>
+    <updated>2024-02-21T09:33:30.420Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;二、数据清洗、转换&quot;&gt;&lt;a href=&quot;#二、数据清洗、转换&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    <category term="ETL" scheme="https://ak47dadada.top/tags/ETL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于Glue ETL(提取、转换和加载)的serviceless 数据分析——三、serverless数据分析</title>
+    <link href="https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%B8%89%E3%80%81serverless%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/"/>
+    <id>https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%B8%89%E3%80%81serverless%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</id>
+    <published>2024-02-21T09:19:28.041Z</published>
+    <updated>2024-02-21T09:33:30.420Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;三、serverless数据分析&quot;&gt;&lt;a href=&quot;#三、serverless数据分析&quot; class=&quot;headerlink&quot; title=&quot;三、serverless数据分析&quot;&gt;&lt;/a&gt;三、serverless数据分析&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    <category term="ETL" scheme="https://ak47dadada.top/tags/ETL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于AWS Batch的量化回测系统</title>
+    <link href="https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EAWS%20Batch%E7%9A%84%E9%87%8F%E5%8C%96%E5%9B%9E%E6%B5%8B%E7%B3%BB%E7%BB%9F/"/>
+    <id>https://ak47dadada.top/2024/02/21/aws/%E5%9F%BA%E4%BA%8EAWS%20Batch%E7%9A%84%E9%87%8F%E5%8C%96%E5%9B%9E%E6%B5%8B%E7%B3%BB%E7%BB%9F/</id>
+    <published>2024-02-21T09:18:53.861Z</published>
+    <updated>2024-02-21T09:33:30.420Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;1-Amazon-SageMaker&quot;&gt;&lt;a href=&quot;#1-Amazon-SageMaker&quot; class=&quot;headerlink&quot; title=&quot;1 Amazon SageMaker&quot;&gt;&lt;/a&gt;1 Amazon</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="量化回测" scheme="https://ak47dadada.top/tags/%E9%87%8F%E5%8C%96%E5%9B%9E%E6%B5%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Apache Superset 通过GLUE可视化s3、RDS、RedShift中的数据</title>
+    <link href="https://ak47dadada.top/2024/02/21/aws/Apache%20Superset%20%E9%80%9A%E8%BF%87GLUE%E5%8F%AF%E8%A7%86%E5%8C%96s3%E3%80%81RDS%E3%80%81RedShift%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE/"/>
+    <id>https://ak47dadada.top/2024/02/21/aws/Apache%20Superset%20%E9%80%9A%E8%BF%87GLUE%E5%8F%AF%E8%A7%86%E5%8C%96s3%E3%80%81RDS%E3%80%81RedShift%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE/</id>
+    <published>2024-02-21T07:12:45.654Z</published>
+    <updated>2024-02-21T09:33:30.420Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;Superset部署&quot;&gt;&lt;a href=&quot;#Superset部署&quot; class=&quot;headerlink&quot; title=&quot;Superset部署&quot;&gt;&lt;/a&gt;Superset部署&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql 锁知识汇总</title>
+    <link href="https://ak47dadada.top/2024/01/31/mysql/mysql%20%E9%94%81%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/"/>
+    <id>https://ak47dadada.top/2024/01/31/mysql/mysql%20%E9%94%81%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</id>
+    <published>2024-01-31T09:59:18.000Z</published>
+    <updated>2024-02-21T09:56:48.890Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%80%E9%94%81&quot;&gt;一、锁&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#11-%E4%BB%80%E4%B9%88%E6%98%AF%E9%94%81&quot;&gt;1.1 什么是锁？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/tags/mysql/"/>
+    
+    <category term="锁" scheme="https://ak47dadada.top/tags/%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql 事务知识汇总</title>
+    <link href="https://ak47dadada.top/2024/01/31/mysql/mysql%20%E4%BA%8B%E5%8A%A1%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/"/>
+    <id>https://ak47dadada.top/2024/01/31/mysql/mysql%20%E4%BA%8B%E5%8A%A1%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</id>
+    <published>2024-01-31T02:20:01.000Z</published>
+    <updated>2024-02-21T09:56:41.770Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%80mysql%E4%BA%8B%E5%8A%A1&quot;&gt;一、MySQL事务&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/tags/mysql/"/>
+    
+    <category term="事务" scheme="https://ak47dadada.top/tags/%E4%BA%8B%E5%8A%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql 索引知识汇总</title>
+    <link href="https://ak47dadada.top/2024/01/30/mysql/mysql%20%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/"/>
+    <id>https://ak47dadada.top/2024/01/30/mysql/mysql%20%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</id>
+    <published>2024-01-30T03:25:49.000Z</published>
+    <updated>2024-02-21T09:56:34.150Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%80mysql-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&quot;&gt;一、mysql 数据结构&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/tags/mysql/"/>
+    
+    <category term="索引" scheme="https://ak47dadada.top/tags/%E7%B4%A2%E5%BC%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql 执行流程知识汇总</title>
+    <link href="https://ak47dadada.top/2024/01/29/mysql/mysql%20%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/"/>
+    <id>https://ak47dadada.top/2024/01/29/mysql/mysql%20%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</id>
+    <published>2024-01-29T08:16:50.000Z</published>
+    <updated>2024-02-21T09:56:24.790Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%80mysql&quot;&gt;一、MySql&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#11-server%E5%B1%82&quot;&gt;1.1 Server层&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://ak47dadada.top/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>TCP 重传、滑动窗口、流量控制、拥塞控制知识汇总</title>
+    <link href="https://ak47dadada.top/2024/01/19/network/TCP%20%E9%87%8D%E4%BC%A0%E3%80%81%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E3%80%81%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/"/>
+    <id>https://ak47dadada.top/2024/01/19/network/TCP%20%E9%87%8D%E4%BC%A0%E3%80%81%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E3%80%81%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</id>
+    <published>2024-01-19T09:40:18.000Z</published>
+    <updated>2024-02-21T09:56:11.080Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;本文对此文章做出了个人的总计。&lt;br&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="tcp" scheme="https://ak47dadada.top/categories/tcp/"/>
+    
+    
+    <category term="tcp" scheme="https://ak47dadada.top/tags/tcp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>TCP三次握手与四次挥手知识汇总</title>
+    <link href="https://ak47dadada.top/2024/01/18/network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/"/>
+    <id>https://ak47dadada.top/2024/01/18/network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</id>
+    <published>2024-01-18T10:16:54.000Z</published>
+    <updated>2024-02-21T09:56:03.680Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%80tcp&quot;&gt;一、TCP&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#11-%E6%80%BB%E8%A7%88%E5%9B%BE&quot;&gt;1.1 总览图&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="tcp" scheme="https://ak47dadada.top/categories/tcp/"/>
+    
+    
+    <category term="tcp" scheme="https://ak47dadada.top/tags/tcp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>OSI七层模型和TCP_IP四层(五层)模型知识汇总</title>
+    <link href="https://ak47dadada.top/2024/01/18/network/OSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%92%8CTCP_IP%E5%9B%9B%E5%B1%82(%E4%BA%94%E5%B1%82)%E6%A8%A1%E5%9E%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/"/>
+    <id>https://ak47dadada.top/2024/01/18/network/OSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%92%8CTCP_IP%E5%9B%9B%E5%B1%82(%E4%BA%94%E5%B1%82)%E6%A8%A1%E5%9E%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</id>
+    <published>2024-01-18T03:02:51.000Z</published>
+    <updated>2024-02-21T09:55:56.700Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%80%E4%BB%80%E4%B9%88%E6%98%AFosi%E6%A8%A1%E5%9E%8B&quot;&gt;一、什么是OSI模型？&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="tcp" scheme="https://ak47dadada.top/categories/tcp/"/>
+    
+    
+    <category term="tcp" scheme="https://ak47dadada.top/tags/tcp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Starlette 源码分析</title>
+    <link href="https://ak47dadada.top/2023/08/23/python/fastapi/Starlette%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>https://ak47dadada.top/2023/08/23/python/fastapi/Starlette%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</id>
+    <published>2023-08-23T06:05:40.000Z</published>
+    <updated>2024-02-21T09:55:46.760Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;Table-of-Contents&quot;&gt;&lt;a href=&quot;#Table-of-Contents&quot; class=&quot;headerlink&quot; title=&quot;Table of Contents&quot;&gt;&lt;/a&gt;Table of Contents&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/categories/python/"/>
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/tags/python/"/>
+    
+    <category term="fastapi" scheme="https://ak47dadada.top/tags/fastapi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>fastapi源码流程图</title>
+    <link href="https://ak47dadada.top/2023/08/23/python/fastapi/fastapi%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE/"/>
+    <id>https://ak47dadada.top/2023/08/23/python/fastapi/fastapi%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE/</id>
+    <published>2023-08-23T03:47:37.000Z</published>
+    <updated>2024-02-21T09:55:39.340Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;fastapi源码过程调用大致流程图&lt;br&gt;&lt;a href=&quot;https://www.processon.com/v/64e5810d8ae8db1df6dc590e&quot;&gt;processon地址&lt;/a&gt;&lt;br&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/categories/python/"/>
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/tags/python/"/>
+    
+    <category term="fastapi" scheme="https://ak47dadada.top/tags/fastapi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>django bulk_update_or_create 批量创建更新</title>
+    <link href="https://ak47dadada.top/2023/03/14/python/django/django%20bulk_update_or_create%20%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E6%9B%B4%E6%96%B0/"/>
+    <id>https://ak47dadada.top/2023/03/14/python/django/django%20bulk_update_or_create%20%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E6%9B%B4%E6%96%B0/</id>
+    <published>2023-03-14T10:05:53.000Z</published>
+    <updated>2024-02-21T09:55:28.240Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E5%89%8D%E8%A8%80&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%80%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0&quot;&gt;一、代码实现&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/categories/python/"/>
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/tags/python/"/>
+    
+    <category term="django" scheme="https://ak47dadada.top/tags/django/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Django 全局获取request</title>
+    <link href="https://ak47dadada.top/2023/03/14/python/django/Django%20%E5%85%A8%E5%B1%80%E8%8E%B7%E5%8F%96request/"/>
+    <id>https://ak47dadada.top/2023/03/14/python/django/Django%20%E5%85%A8%E5%B1%80%E8%8E%B7%E5%8F%96request/</id>
+    <published>2023-03-14T09:09:45.000Z</published>
+    <updated>2024-02-21T09:55:16.030Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E5%89%8D%E8%A8%80&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/categories/python/"/>
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/tags/python/"/>
+    
+    <category term="django" scheme="https://ak47dadada.top/tags/django/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在Django模型中，将CharField更改为ArrayField</title>
+    <link href="https://ak47dadada.top/2023/02/16/python/django/%E5%9C%A8Django%E6%A8%A1%E5%9E%8B%E4%B8%AD%EF%BC%8C%E5%B0%86CharField%E6%9B%B4%E6%94%B9%E4%B8%BAArrayField/"/>
+    <id>https://ak47dadada.top/2023/02/16/python/django/%E5%9C%A8Django%E6%A8%A1%E5%9E%8B%E4%B8%AD%EF%BC%8C%E5%B0%86CharField%E6%9B%B4%E6%94%B9%E4%B8%BAArrayField/</id>
+    <published>2023-02-16T03:39:58.000Z</published>
+    <updated>2024-02-21T09:55:08.260Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;在不更改原数据的情况下，将某一个字符串字段转为列表字段&quot;&gt;&lt;a href=&quot;#在不更改原数据的情况下，将某一个字符串字段转为列表字段&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/categories/python/"/>
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/tags/python/"/>
+    
+    <category term="django" scheme="https://ak47dadada.top/tags/django/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用aws Glue与kinesis 构建的流式ETL作业——二、数据处理</title>
+    <link href="https://ak47dadada.top/2022/09/09/aws/%E4%BD%BF%E7%94%A8aws%20Glue%E4%B8%8Ekinesis%20%E6%9E%84%E5%BB%BA%E7%9A%84%E6%B5%81%E5%BC%8FETL%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/"/>
+    <id>https://ak47dadada.top/2022/09/09/aws/%E4%BD%BF%E7%94%A8aws%20Glue%E4%B8%8Ekinesis%20%E6%9E%84%E5%BB%BA%E7%9A%84%E6%B5%81%E5%BC%8FETL%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/</id>
+    <published>2022-09-09T10:50:24.000Z</published>
+    <updated>2024-02-21T09:57:49.410Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;二、数据处理&quot;&gt;&lt;a href=&quot;#二、数据处理&quot; class=&quot;headerlink&quot; title=&quot;二、数据处理&quot;&gt;&lt;/a&gt;二、数据处理&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    <category term="ETL" scheme="https://ak47dadada.top/tags/ETL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用aws Glue与kinesis 构建的流式ETL作业——一、数据实时采集</title>
+    <link href="https://ak47dadada.top/2022/09/09/aws/%E4%BD%BF%E7%94%A8aws%20Glue%E4%B8%8Ekinesis%20%E6%9E%84%E5%BB%BA%E7%9A%84%E6%B5%81%E5%BC%8FETL%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%B8%80%E3%80%81%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E9%87%87%E9%9B%86/"/>
+    <id>https://ak47dadada.top/2022/09/09/aws/%E4%BD%BF%E7%94%A8aws%20Glue%E4%B8%8Ekinesis%20%E6%9E%84%E5%BB%BA%E7%9A%84%E6%B5%81%E5%BC%8FETL%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%B8%80%E3%80%81%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E9%87%87%E9%9B%86/</id>
+    <published>2022-09-09T09:42:39.000Z</published>
+    <updated>2024-02-21T09:57:35.790Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;一、数据采集准备工作&quot;&gt;&lt;a href=&quot;#一、数据采集准备工作&quot; class=&quot;headerlink&quot; title=&quot;一、数据采集准备工作&quot;&gt;&lt;/a&gt;一、数据采集准备工作&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    <category term="ETL" scheme="https://ak47dadada.top/tags/ETL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Glue连接RedShift的前置条件：创建终端节点</title>
+    <link href="https://ak47dadada.top/2022/08/25/aws/Glue%E8%BF%9E%E6%8E%A5RedShift%E7%9A%84%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%BB%88%E7%AB%AF%E8%8A%82%E7%82%B9/"/>
+    <id>https://ak47dadada.top/2022/08/25/aws/Glue%E8%BF%9E%E6%8E%A5RedShift%E7%9A%84%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%BB%88%E7%AB%AF%E8%8A%82%E7%82%B9/</id>
+    <published>2022-08-25T10:49:36.000Z</published>
+    <updated>2024-02-21T09:54:58.110Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;strong&gt;进入vpc选择终端节点&lt;/strong&gt;&lt;br&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
+    
+    
+    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
+    
+    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+  </entry>
+  
+</feed>
