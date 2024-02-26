@@ -1,69 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>使用python实现一个SCP小工具</title>
-    <url>/2024/02/26/python/%E4%BD%BF%E7%94%A8python%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AASCP%E5%B0%8F%E5%B7%A5%E5%85%B7/</url>
-    <content><![CDATA[<p><strong>源码地址：</strong><br><a href="https://github.com/suzikuo/ssh_scp">ssh_scp</a><br><strong>工具截图：</strong></p>
-<blockquote>
-<p>一个简易的scp文件上传下载小工具，用来上传或下载一些小文件。<br>目前只适用于windows，</p>
-</blockquote>
-<p><img src="https://img-blog.csdnimg.cn/direct/a599a39ab11d418daf5cad9dabc27264.png" alt="在这里插入图片描述"></p>
-<h2 id="使用方法："><a href="#使用方法：" class="headerlink" title="使用方法："></a><strong>使用方法：</strong></h2><h3 id="前提："><a href="#前提：" class="headerlink" title="前提："></a>前提：</h3><p>工具同级目录，创建一个<code>ssh_commands.json</code>文件。用来存储配置信息。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;Show Name &quot;</span>: &#123; <span class="comment"># 显示的名称</span></span><br><span class="line">        <span class="string">&quot;pem&quot;</span>: <span class="string">&quot;C:\\Users\\xxx\\Desktop\\pem\\VPN.pem&quot;</span>, <span class="comment"># PEM文件地址</span></span><br><span class="line">        <span class="string">&quot;host&quot;</span>: <span class="string">&quot;ubuntu@ec2-xxxxxx.ap-northeast-2.compute.amazonaws.com&quot;</span> <span class="comment"># 机器IP地址</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;Show Name2 &quot;</span>: &#123; <span class="comment"># 显示的名称</span></span><br><span class="line">        <span class="string">&quot;password&quot;</span>: <span class="string">&quot;123123123&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">        <span class="string">&quot;host&quot;</span>: <span class="string">&quot;root@192.168.1.1&quot;</span> <span class="comment"># 机器IP地址</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="上传："><a href="#上传：" class="headerlink" title="上传："></a><strong>上传：</strong></h3><p>1、选择要上传的文件或文件夹。<br>2、在SSH连接中，选择目标机器，点击选择连接。<br>3、在远程文件中，输入目标机器的存储地址<br>4、点击上传。</p>
-<h3 id="下载："><a href="#下载：" class="headerlink" title="下载："></a>下载：</h3><p>1、选择要下载到的文件夹地址，例如桌面。<br>2、在SSH连接中，选择源机器，点击选择连接。<br>3、在远程文件中，输入要下载的文件的地址。<br>4、点击下载。</p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在新安装的Centos中安装python3.7 解决pip和yum问题</title>
-    <url>/2021/03/29/python/%E5%9C%A8%E6%96%B0%E5%AE%89%E8%A3%85%E7%9A%84Centos%E4%B8%AD%E5%AE%89%E8%A3%85python3.7%20%E8%A7%A3%E5%86%B3pip%E5%92%8Cyum%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<div id="article_content" class="article_content clearfix">
-        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css">
-                <div id="content_views" class="htmledit_views">
-                    <p>首先要先安装依赖包：</p> 
-<pre class="has" name="code"><code class="hljs sql">yum <span class="hljs-keyword">install</span> zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make
-</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>cd到一个你想放在的地方，哪里都可以。接着找到python3.7的安装包：</p> 
-<pre class="has" name="code"><code class="hljs apache"><span class="hljs-attribute">wget</span> https://www.python.org/ftp/python/<span class="hljs-number">3</span>.<span class="hljs-number">7</span>.<span class="hljs-number">0</span>/Python-<span class="hljs-number">3</span>.<span class="hljs-number">7</span>.<span class="hljs-number">0</span>.tgz</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>现在这个.tgz文件就下载到了你现在目录中，接着解压：</p> 
-<pre class="has" name="code"><code class="hljs apache"><span class="hljs-attribute">tar</span> -zxvf Python-<span class="hljs-number">3</span>.<span class="hljs-number">7</span>.<span class="hljs-number">0</span>.tgz</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>然后此目录下就多出了一个解压后的文件Python-3.7.0，下面进入文件夹中：</p> 
-<pre class="has" name="code"><code class="hljs go"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">cd&nbsp;Python<span class="hljs-number">-3.7</span><span class="hljs-number">.0</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">./configure</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-built_in">make</span>&amp;&amp;<span class="hljs-built_in">make</span> install</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>执行完make&amp;&amp;make install之后，可能会出现这种报错：</p> 
-<pre class="has" name="code"><code class="hljs crystal">“ModuleNotFound：No <span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">named</span> '<span class="hljs-title">_ctypes</span>'”</span></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>这里需要执行：</p> 
-<pre class="has" name="code"><code class="hljs sql">yum <span class="hljs-keyword">install</span> libffi-devel -y</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>执行完继续make&amp;&amp;make install</p> 
-<p>这样，基本上python3.7我们就安装完成了，默认情况下，python3.7安装在/usr/local/bin/，这里为了使默认python变成python3，需要加一条软链接,并把之前的python命令改成python.bak：</p> 
-<pre class="has" name="code"><code class="hljs groovy"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">mv <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/python /</span>usr<span class="hljs-regexp">/bin/</span>python.bak</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>python3 <span class="hljs-regexp">/usr/</span>bin/python</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>接着默认pip也是需要修改的，可以通过find / -name 'pip3'找到pip3的位置，同样的，加一条软链到bin里面：</p> 
-<pre class="has" name="code"><code class="hljs groovy"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">mv <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/pip /</span>usr<span class="hljs-regexp">/bin/</span>pip.bak</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>pip3 <span class="hljs-regexp">/usr/</span>bin/pip</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p>既然把默认python改成了python3的版本，那么这时候yum就出问题了，因为yum貌似不支持python3，开发了这个命令的老哥也不打算继续写支持python3的版本了，所以，如果和python版本相关的文件就不要通过yum下载了，这里我们需要把yum默认的指向改为python2.7的版本，分别是两个文件，使用vi打开，输入i进行修改，修改完之后按esc键，然后输入":wq"，这就完成了修改并保存：</p> 
-<pre class="has" name="code"><code class="hljs groovy">vi <span class="hljs-regexp">/usr/</span>libexec/urlgrabber-ext-down
-</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p><img alt="" class="has" height="520" src="https://img-blog.csdn.net/20180809175937778?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMyMTQyMTI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="554"></p> 
-<pre class="has" name="code"><code class="hljs groovy">vi <span class="hljs-regexp">/usr/</span>bin/yum</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
-<p><img alt="" class="has" height="381" src="https://img-blog.csdn.net/20180809180044293?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMyMTQyMTI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="488"></p> 
-<p>自此，我们就完成了新安装的centos系统中的两个python版本的全部流程。</p> 
-<p>在小黑框中输入python2则调起python2，输入python，则默认调起python3，pip2调起python2下的pip，pip调起python下的pip。</p>
-                </div><div><div></div></div>
-        </div>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Apache Superset 通过GLUE可视化s3、RDS、RedShift中的数据</title>
     <url>/2024/02/21/aws/Apache%20Superset%20%E9%80%9A%E8%BF%87GLUE%E5%8F%AF%E8%A7%86%E5%8C%96s3%E3%80%81RDS%E3%80%81RedShift%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE/</url>
     <content><![CDATA[<h2 id="Superset部署"><a href="#Superset部署" class="headerlink" title="Superset部署"></a>Superset部署</h2><ul>
@@ -824,22 +761,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Given transaction number 1 does not match any in-progress transactions</title>
-    <url>/2021/12/28/mongodb/Given%20transaction%20number%201%20does%20not%20match%20any%20in-progress%20transactions/</url>
-    <content><![CDATA[<p><strong>错误信息：</strong><br><strong>Given transaction number 1 does not match any in-progress transactions</strong><br><strong>出错代码：</strong></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">getattr</span>(self._mg_db_write, PublicationCollectionInfoTable.table_name).find_one_and_update(query_dict, update_dict,upsert=<span class="literal">True</span>,session=session)</span><br></pre></td></tr></table></figure>
-
-<p>在使用pymongo 操作mongodb时，使用了事务来进行数据插入与更新<br><img src="https://img-blog.csdnimg.cn/4897072ad2034d948d09c456aac87785.png"><br><img src="https://img-blog.csdnimg.cn/117c41cefe044909a6dba66425bb293f.png"><br>在本地测试没有问题，在线上环境使用报错：<br><code>Given transaction number 1 does not match any in-progress transactions</code><br><strong>原因</strong>：<br>主要原因：数据库中未创建表！<br>1、mongodb版本问题，线上与线下不统一。<br>线上版本低于线下版本，线上的mongodb.find_one_and_update暂不支持session共享，但insert_one 和 update_one 支持共享session。<br>2、session超时，默认事务生命周期最大值为1分钟<br><strong>目前解决方案：</strong><br>解决方案：手动新建对应表<br>1、统一mongodb版本<br>2、将find_one_and_update拆为find_one和insert_one或update_one<br>3、手动回滚：获取操作成功的数据，在某一步出错时，手动还原所有操作。如insert的delete掉。<br>4、session超时解决自己百度</p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>mongodb</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>基于Glue ETL(提取、转换和加载)的serviceless 数据分析——二、数据清洗、转换</title>
     <url>/2024/02/21/aws/%E5%9F%BA%E4%BA%8EGlue%20ETL(%E6%8F%90%E5%8F%96%E3%80%81%E8%BD%AC%E6%8D%A2%E5%92%8C%E5%8A%A0%E8%BD%BD)%E7%9A%84serviceless%20%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E3%80%81%E8%BD%AC%E6%8D%A2/</url>
     <content><![CDATA[<h1 id="二、数据清洗、转换"><a href="#二、数据清洗、转换" class="headerlink" title="二、数据清洗、转换"></a>二、数据清洗、转换</h1><p><strong>此实验使用s3作为数据源</strong></p>
@@ -1094,6 +1015,22 @@
       <tags>
         <tag>mysql</tag>
         <tag>事务</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Given transaction number 1 does not match any in-progress transactions</title>
+    <url>/2021/12/28/mongodb/Given%20transaction%20number%201%20does%20not%20match%20any%20in-progress%20transactions/</url>
+    <content><![CDATA[<p><strong>错误信息：</strong><br><strong>Given transaction number 1 does not match any in-progress transactions</strong><br><strong>出错代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">getattr</span>(self._mg_db_write, PublicationCollectionInfoTable.table_name).find_one_and_update(query_dict, update_dict,upsert=<span class="literal">True</span>,session=session)</span><br></pre></td></tr></table></figure>
+
+<p>在使用pymongo 操作mongodb时，使用了事务来进行数据插入与更新<br><img src="https://img-blog.csdnimg.cn/4897072ad2034d948d09c456aac87785.png"><br><img src="https://img-blog.csdnimg.cn/117c41cefe044909a6dba66425bb293f.png"><br>在本地测试没有问题，在线上环境使用报错：<br><code>Given transaction number 1 does not match any in-progress transactions</code><br><strong>原因</strong>：<br>主要原因：数据库中未创建表！<br>1、mongodb版本问题，线上与线下不统一。<br>线上版本低于线下版本，线上的mongodb.find_one_and_update暂不支持session共享，但insert_one 和 update_one 支持共享session。<br>2、session超时，默认事务生命周期最大值为1分钟<br><strong>目前解决方案：</strong><br>解决方案：手动新建对应表<br>1、统一mongodb版本<br>2、将find_one_and_update拆为find_one和insert_one或update_one<br>3、手动回滚：获取操作成功的数据，在某一步出错时，手动还原所有操作。如insert的delete掉。<br>4、session超时解决自己百度</p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>mongodb</tag>
       </tags>
   </entry>
   <entry>
@@ -1447,81 +1384,114 @@
       </tags>
   </entry>
   <entry>
-    <title>OSI七层模型和TCP_IP四层(五层)模型知识汇总</title>
-    <url>/2024/01/18/network/OSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%92%8CTCP_IP%E5%9B%9B%E5%B1%82(%E4%BA%94%E5%B1%82)%E6%A8%A1%E5%9E%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</url>
-    <content><![CDATA[<ul>
-<li><a href="#%E4%B8%80%E4%BB%80%E4%B9%88%E6%98%AFosi%E6%A8%A1%E5%9E%8B">一、什么是OSI模型？</a><ul>
-<li><a href="#11%E5%AE%9A%E4%B9%89">1.1定义：</a></li>
-<li><a href="#12-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84">1.2 网络结构：</a></li>
-<li><a href="#13-%E6%80%BB%E8%A7%88%E5%9B%BE">1.3 总览图</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BA%8C%E4%BB%80%E4%B9%88%E6%98%AFtcpip%E6%A8%A1%E5%9E%8B">二、什么是TCP&#x2F;IP模型</a><ul>
-<li><a href="#21-%E5%AE%9A%E4%B9%89">2.1 定义：</a></li>
-<li><a href="#22-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E5%9B%9B%E5%B1%82%E4%BA%94%E5%B1%82">2.2 网络结构(四层&#x2F;五层)</a></li>
-<li><a href="#23-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%895%E5%B1%82%E6%9E%B6%E6%9E%84">2.3 为什么会有5层架构？</a></li>
-<li><a href="#24-%E6%80%BB%E8%A7%88%E5%9B%BE">2.4 总览图</a></li>
-</ul>
-</li>
-<li><a href="#%E4%B8%89%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB">三、关系与区别</a><ul>
-<li><a href="#31-%E6%80%BB%E8%A7%88%E5%9B%BE">3.1 总览图</a></li>
-<li><a href="#32-%E5%85%B3%E7%B3%BB">3.2 关系</a></li>
-<li><a href="#33-%E5%8C%BA%E5%88%AB">3.3 区别</a></li>
-</ul>
-</li>
-<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">参考文献：</a></li>
-</ul>
-<h3 id="一、什么是OSI模型？"><a href="#一、什么是OSI模型？" class="headerlink" title="一、什么是OSI模型？"></a>一、什么是OSI模型？</h3><h4 id="1-1定义："><a href="#1-1定义：" class="headerlink" title="1.1定义："></a><a href="https://wenku.baidu.com/view/6025b70e6c85ec3a87c2c512.html?_wkts_=1705544418111&bdQuery=%E4%BB%80%E4%B9%88%E6%98%AFOSI%E5%8D%8F%E8%AE%AE">1.1定义</a>：</h4><blockquote>
-<p>OSI（Open system interconnect）,即开放式系统互联。一般叫OSI参考模型，是 <strong>ISO（国际标准化组织）</strong> 在1985年研究的网络互联模型，用于计算机或通信系统间互联的标准体系。。ISO为了使网络更为普及，推出了OSI模型。其含义就是推荐所有公司使用这个规范来控制网络。这样所有的公司就有了相同的规范，就可以进行互联。</p>
-</blockquote>
-<h4 id="1-2-网络结构："><a href="#1-2-网络结构：" class="headerlink" title="1.2 网络结构："></a>1.2 网络结构：</h4><p>从上(贴近用户侧)到下依次为：</p>
-<ol>
-<li><strong>应用层</strong>：为用户的应用程序提供网络服务。应用层是OSI参考模型的最高层，是用户与网络的接口。</li>
-<li><strong>表现层</strong>：将信息表示为一定形式和格式的数据流。表示层处理流经结点的数据编码的表示方式问题，以保证一个系统应用层发出的信息可被另一系统的应用层读出。数据格式化、数据加密</li>
-<li><strong>会话层</strong>：负责通信主机之间会话的建立、管理和拆除，协调通信双方的会话。会话层主要功能是管理和协调不同主机上各种进程之间的通信（对话），即负责建立、管理和终止应用程序之间的会话建立、管理和维护会话</li>
-<li><strong>传输层</strong>：负责通信主机间端到端的连接。传输层的作用是为上层协议提供端到端的可靠和透明的数据传输服务，包括处理差错控制和流量控制等问题。</li>
-<li><strong>网络层</strong>：负责将分组从源机送到目的机，包括寻址和最优路径选择等。网络层是为传输层提供服务的，传送的协议数据单元称为数据包或分组。</li>
-<li><strong>数据链路层</strong>：提供可靠的帧传递，实现差错控制、流控等等。数据链路层是为网络层提供服务的，解决两个相邻结点之间的通信问题。</li>
-<li><strong>物理层</strong>：提供透明的比特流（01流）传递。物理层是OSI参考模型的最低层，它利用传输介质为数据链路层提供物理连接。</li>
-</ol>
-<h4 id="1-3-总览图"><a href="#1-3-总览图" class="headerlink" title="1.3 总览图"></a>1.3 总览图</h4><p><img src="https://img-blog.csdnimg.cn/direct/55f6da17f9e8424ab45e2bfb0b99ad65.png"></p>
-<h3 id="二、什么是TCP-IP模型"><a href="#二、什么是TCP-IP模型" class="headerlink" title="二、什么是TCP&#x2F;IP模型"></a>二、什么是TCP&#x2F;IP模型</h3><h4 id="2-1-定义："><a href="#2-1-定义：" class="headerlink" title="2.1 定义："></a>2.1 定义：</h4><blockquote>
-<p> <strong>TCP&#x2F;IP（Transmission Control Protocol&#x2F;Internet Protocol，传输控制协议&#x2F;网际协议）</strong> 是指能够在多个不同网络间实现信息传输的协议簇。TCP&#x2F;IP协议不仅仅指的是TCP 和IP两个协议，而是指一个由FTP、SMTP、TCP、UDP、IP等协议构成的协议簇， 只是因为在TCP&#x2F;IP协议中TCP协议和IP协议最具代表性，所以被称为TCP&#x2F;IP协议</p>
-</blockquote>
-<h4 id="2-2-网络结构-四层-五层"><a href="#2-2-网络结构-四层-五层" class="headerlink" title="2.2 网络结构(四层&#x2F;五层)"></a>2.2 网络结构(四层&#x2F;五层)</h4><p>从上(贴近用户侧)到下依次为：</p>
-<ol>
-<li><strong>应用层</strong>：应用层的任务是通过应用进程间的交互来完成特定网络应用。对于不同的网络应用需要不同的应用层协议。例如，HTTP、FTP、SMTP协议等。我们把应用层交互的数据单元称为<strong>报文</strong>。</li>
-<li><strong>传输层</strong>：为两台主机进程之间的通信提供通用的<strong>数据传输服务</strong>，保证了数据包的顺序传送及数据的完整性。包含两种协议：TCP、UDP</li>
-<li><strong>网络层</strong>：主要解决主机到主机的通信问题。(互联网使用的网络层协议是无连接的网际协议（Intert Protocol）和许多路由选择协议，因此互联网的网络层也叫做网际层或IP层)。 在发送数据时，网络层把运输层产生的报文段或用户数据报封装成分组和包进行传送。在 TCP&#x2F;IP 体系结构中，由于<strong>网络层使用 IP 协议</strong>，因此分组也叫 <strong>IP 数据报</strong> ，简称 数据报。</li>
-<li><strong>网络接口层</strong>：负责监视数据在主机和网络之间的交换。</li>
-</ol>
-<h4 id="2-3-为什么会有5层架构？"><a href="#2-3-为什么会有5层架构？" class="headerlink" title="2.3 为什么会有5层架构？"></a>2.3 为什么会有5层架构？</h4><blockquote>
-<p>还有一种是五层协议的体系结构，是 <strong>专门为介绍网络原理(为了学术学习)</strong> 而设计的，与TCP&#x2F;IP四层模型唯一不同的就是将网络接口层分为了数据链路层和物理层，在实际的<strong>应用中还是使用TCP&#x2F;IP四层模型的</strong>。</p>
-</blockquote>
-<h4 id="2-4-总览图"><a href="#2-4-总览图" class="headerlink" title="2.4 总览图"></a>2.4 总览图</h4><p><img src="https://img-blog.csdnimg.cn/direct/ad0542d7ff53413abbc5474f4ad86fa7.png"></p>
-<h3 id="三、关系与区别"><a href="#三、关系与区别" class="headerlink" title="三、关系与区别"></a>三、关系与区别</h3><h4 id="3-1-总览图"><a href="#3-1-总览图" class="headerlink" title="3.1 总览图"></a>3.1 总览图</h4><p><img src="https://img-blog.csdnimg.cn/direct/2dfb43a49f4c4e51b0c96fb4ef5262b2.png"></p>
-<h4 id="3-2-关系"><a href="#3-2-关系" class="headerlink" title="3.2 关系"></a>3.2 关系</h4><ol>
-<li>TCP&#x2F;IP四层模型是OSI七层模型的简化版，但是大致的核心内容是很类似的。</li>
-<li>OSI引入了服务、接口、协议、分层的概念，而TCP&#x2F;IP借鉴了OSI的概念。</li>
-<li>OSI先有模型，后有协议，先有标准，后进行实践，而TCP&#x2F;IP先有协议和应用再提出了模型，且是参照的OSI模型。</li>
-<li>OSI虽然是官方提出的，但是由于一些原因，在它被完善之前，由民间开发的TCP&#x2F;IP早已投入实际使用了，所以它几乎是只存在与教科书中，并没有大范围地投入使用。</li>
-</ol>
-<h4 id="3-3-区别"><a href="#3-3-区别" class="headerlink" title="3.3 区别"></a>3.3 区别</h4><ol>
-<li>TCP&#x2F;IP他是一个<strong>协议簇</strong>；而OSI（开放系统互联）则是一个<strong>模型</strong>，且TCP&#x2F;IP的开发时间在OSI之前。</li>
-<li>TCP&#x2F;IP是由一些交互性的模块做成的分层次的协议，其中每个模块提供特定的功能；OSi则指定了哪个功能是属于哪一层的。</li>
-<li>TCP&#x2F;IP是<strong>四层&#x2F;五层</strong>结构，而OSI是<strong>七层结构</strong>。OSI的最高三层在TCP中用应用层表示，在TCP&#x2F;IP四层结构中将OSI最后两层表示为了网络接口层。</li>
-</ol>
-<h3 id="参考文献："><a href="#参考文献：" class="headerlink" title="参考文献："></a>参考文献：</h3><ul>
-<li><a href="https://www.php.cn/faq/494920.html">osi和tcp&#x2F;ip的区别和联系是什么</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/268196525">OSI七层模型和TCP&#x2F;IP四层模型以及五层模型</a></li>
-</ul>
-<p>Author：黑猫</p>
+    <title>opencv打包成exe在win7运行报错</title>
+    <url>/2021/03/26/python/opencv%E6%89%93%E5%8C%85%E6%88%90exe%E5%9C%A8win7%E8%BF%90%E8%A1%8C%E6%8A%A5%E9%94%99/</url>
+    <content><![CDATA[<h2 id="opencv打包成exe在win7运行报错"><a href="#opencv打包成exe在win7运行报错" class="headerlink" title="opencv打包成exe在win7运行报错"></a>opencv打包成exe在win7运行报错</h2><p><strong>1、安装过程错误警告</strong><br>opencv版本：3.4.3<br>打包环境：win10<br>运行环境：win7<br>opencv报错：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210326111826691.png"></p>
+<p><strong>2、解决方案</strong><br><a href="https://pan.baidu.com/s/1qXt1BNClftx6fE5aAQWrsw">opencv插件打包</a><br>提取码: fp7v<br>将 api-ms-win-downlevel-shlwapi-l1-1-0.dll【System32】 放到 c:\windows\System32<br>将api-ms-win-downlevel-shlwapi-l1-1-0.dll【SysWOW64】 放到C:\Windows\SysWOW64<br>打包环境与运行环境都需要添加dll文件；重新打包、安装；<br><strong>3、注意</strong><br>opencv&gt;3.4.3将出现:<br>    CAP_IMAGES: can‘t find starting number (in the name of file)<br>    错误，提示缺少文件，或没有编号。暂无解决。</p>
 ]]></content>
       <categories>
-        <category>tcp</category>
+        <category>python</category>
       </categories>
       <tags>
-        <tag>tcp</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>unity的button按钮组件与toggle组件的点击事件的移除</title>
+    <url>/2021/08/10/unity/unity%E7%9A%84button%E6%8C%89%E9%92%AE%E7%BB%84%E4%BB%B6%E4%B8%8Etoggle%E7%BB%84%E4%BB%B6%E7%9A%84%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%A7%BB%E9%99%A4/</url>
+    <content><![CDATA[<p>button按钮添加点击事件可以使用这种形式：<br><img src="https://img-blog.csdnimg.cn/63db9678898a478599560035ef6a3009.png"><br>移除某个事件使用SonObj.GetComponent<Button>().onClick.RemoveListener（call）方法移除某个事件。<br>RemoveListener中需要传递的参数为 UnityAction类型：<br><img src="https://img-blog.csdnimg.cn/af95d67fa5644bf68d03710535017543.png"><br>因此，在创建监听事件时，可以将点击事件提取出来，<br><img src="https://img-blog.csdnimg.cn/e853bbcdfba04de1b11da2f98904e307.png"><br>在想要移除此次添加的点击事件时，将call传递给RemoveListener就行。<br><img src="https://img-blog.csdnimg.cn/a33d2fd5567f4b758d95cd98f0e2dabd.png"></p>
+]]></content>
+      <categories>
+        <category>unity</category>
+      </categories>
+      <tags>
+        <tag>unity</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python中threading开启关闭线程</title>
+    <url>/2021/03/18/python/python%E4%B8%ADthreading%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="python中threading开启关闭线程"><a href="#python中threading开启关闭线程" class="headerlink" title="python中threading开启关闭线程"></a>python中threading开启关闭线程</h2><blockquote>
+<p><a href="https://blog.csdn.net/qq_15181569/article/details/93299164">https://blog.csdn.net/qq_15181569/article/details/93299164</a></p>
+</blockquote>
+<p><a href="https://blog.csdn.net/qq_15181569/article/details/93299164">python中threading开启关闭线程</a></p>
+<p><strong>一、启动线程</strong><br>首先导入threading</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">myThread = threading.Thread(target=serial_read)</span><br><span class="line">myThread.start()</span><br></pre></td></tr></table></figure>
+<p><strong>二、停止线程</strong><br>不多说了直接上代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> inspect</span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_async_raise</span>(<span class="params">tid, exctype</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;raises the exception, performs cleanup if needed&quot;&quot;&quot;</span></span><br><span class="line">    tid = ctypes.c_long(tid)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> inspect.isclass(exctype):</span><br><span class="line">        exctype = <span class="built_in">type</span>(exctype)</span><br><span class="line">    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(exctype))</span><br><span class="line">    <span class="keyword">if</span> res == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">&quot;invalid thread id&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> res != <span class="number">1</span>:</span><br><span class="line">        <span class="comment"># &quot;&quot;&quot;if it returns a number greater than one, you&#x27;re in trouble,</span></span><br><span class="line">        <span class="comment"># and you should call it again with exc=NULL to revert the effect&quot;&quot;&quot;</span></span><br><span class="line">        ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, <span class="literal">None</span>)</span><br><span class="line">        <span class="keyword">raise</span> SystemError(<span class="string">&quot;PyThreadState_SetAsyncExc failed&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">stop_thread</span>(<span class="params">thread</span>):</span><br><span class="line">    _async_raise(thread.ident, SystemExit)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">stop_thread(myThread)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用python实现一个SCP小工具</title>
+    <url>/2024/02/26/python/%E4%BD%BF%E7%94%A8python%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AASCP%E5%B0%8F%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[<p><strong>源码地址：</strong><br><a href="https://github.com/suzikuo/ssh_scp">ssh_scp</a><br><strong>工具截图：</strong></p>
+<blockquote>
+<p>一个简易的scp文件上传下载小工具，用来上传或下载一些小文件。<br>目前只适用于windows，</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/direct/a599a39ab11d418daf5cad9dabc27264.png" alt="在这里插入图片描述"></p>
+<h2 id="使用方法："><a href="#使用方法：" class="headerlink" title="使用方法："></a><strong>使用方法：</strong></h2><h3 id="前提："><a href="#前提：" class="headerlink" title="前提："></a>前提：</h3><p>工具同级目录，创建一个<code>ssh_commands.json</code>文件。用来存储配置信息。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;Show Name &quot;</span>: &#123; <span class="comment"># 显示的名称</span></span><br><span class="line">        <span class="string">&quot;pem&quot;</span>: <span class="string">&quot;C:\\Users\\xxx\\Desktop\\pem\\VPN.pem&quot;</span>, <span class="comment"># PEM文件地址</span></span><br><span class="line">        <span class="string">&quot;host&quot;</span>: <span class="string">&quot;ubuntu@ec2-xxxxxx.ap-northeast-2.compute.amazonaws.com&quot;</span> <span class="comment"># 机器IP地址</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;Show Name2 &quot;</span>: &#123; <span class="comment"># 显示的名称</span></span><br><span class="line">        <span class="string">&quot;password&quot;</span>: <span class="string">&quot;123123123&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">        <span class="string">&quot;host&quot;</span>: <span class="string">&quot;root@192.168.1.1&quot;</span> <span class="comment"># 机器IP地址</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="上传："><a href="#上传：" class="headerlink" title="上传："></a><strong>上传：</strong></h3><p>1、选择要上传的文件或文件夹。<br>2、在SSH连接中，选择目标机器，点击选择连接。<br>3、在远程文件中，输入目标机器的存储地址<br>4、点击上传。</p>
+<h3 id="下载："><a href="#下载：" class="headerlink" title="下载："></a>下载：</h3><p>1、选择要下载到的文件夹地址，例如桌面。<br>2、在SSH连接中，选择源机器，点击选择连接。<br>3、在远程文件中，输入要下载的文件的地址。<br>4、点击下载。</p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在新安装的Centos中安装python3.7 解决pip和yum问题</title>
+    <url>/2021/03/29/python/%E5%9C%A8%E6%96%B0%E5%AE%89%E8%A3%85%E7%9A%84Centos%E4%B8%AD%E5%AE%89%E8%A3%85python3.7%20%E8%A7%A3%E5%86%B3pip%E5%92%8Cyum%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<div id="article_content" class="article_content clearfix">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-b5506197d8.css">
+                <div id="content_views" class="htmledit_views">
+                    <p>首先要先安装依赖包：</p> 
+<pre class="has" name="code"><code class="hljs sql">yum <span class="hljs-keyword">install</span> zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make
+</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>cd到一个你想放在的地方，哪里都可以。接着找到python3.7的安装包：</p> 
+<pre class="has" name="code"><code class="hljs apache"><span class="hljs-attribute">wget</span> https://www.python.org/ftp/python/<span class="hljs-number">3</span>.<span class="hljs-number">7</span>.<span class="hljs-number">0</span>/Python-<span class="hljs-number">3</span>.<span class="hljs-number">7</span>.<span class="hljs-number">0</span>.tgz</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>现在这个.tgz文件就下载到了你现在目录中，接着解压：</p> 
+<pre class="has" name="code"><code class="hljs apache"><span class="hljs-attribute">tar</span> -zxvf Python-<span class="hljs-number">3</span>.<span class="hljs-number">7</span>.<span class="hljs-number">0</span>.tgz</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>然后此目录下就多出了一个解压后的文件Python-3.7.0，下面进入文件夹中：</p> 
+<pre class="has" name="code"><code class="hljs go"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">cd&nbsp;Python<span class="hljs-number">-3.7</span><span class="hljs-number">.0</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">./configure</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-built_in">make</span>&amp;&amp;<span class="hljs-built_in">make</span> install</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>执行完make&amp;&amp;make install之后，可能会出现这种报错：</p> 
+<pre class="has" name="code"><code class="hljs crystal">“ModuleNotFound：No <span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">named</span> '<span class="hljs-title">_ctypes</span>'”</span></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>这里需要执行：</p> 
+<pre class="has" name="code"><code class="hljs sql">yum <span class="hljs-keyword">install</span> libffi-devel -y</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>执行完继续make&amp;&amp;make install</p> 
+<p>这样，基本上python3.7我们就安装完成了，默认情况下，python3.7安装在/usr/local/bin/，这里为了使默认python变成python3，需要加一条软链接,并把之前的python命令改成python.bak：</p> 
+<pre class="has" name="code"><code class="hljs groovy"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">mv <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/python /</span>usr<span class="hljs-regexp">/bin/</span>python.bak</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>python3 <span class="hljs-regexp">/usr/</span>bin/python</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>接着默认pip也是需要修改的，可以通过find / -name 'pip3'找到pip3的位置，同样的，加一条软链到bin里面：</p> 
+<pre class="has" name="code"><code class="hljs groovy"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">mv <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/pip /</span>usr<span class="hljs-regexp">/bin/</span>pip.bak</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>pip3 <span class="hljs-regexp">/usr/</span>bin/pip</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p>既然把默认python改成了python3的版本，那么这时候yum就出问题了，因为yum貌似不支持python3，开发了这个命令的老哥也不打算继续写支持python3的版本了，所以，如果和python版本相关的文件就不要通过yum下载了，这里我们需要把yum默认的指向改为python2.7的版本，分别是两个文件，使用vi打开，输入i进行修改，修改完之后按esc键，然后输入":wq"，这就完成了修改并保存：</p> 
+<pre class="has" name="code"><code class="hljs groovy">vi <span class="hljs-regexp">/usr/</span>libexec/urlgrabber-ext-down
+</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p><img alt="" class="has" height="520" src="https://img-blog.csdn.net/20180809175937778?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMyMTQyMTI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="554"></p> 
+<pre class="has" name="code"><code class="hljs groovy">vi <span class="hljs-regexp">/usr/</span>bin/yum</code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div></pre> 
+<p><img alt="" class="has" height="381" src="https://img-blog.csdn.net/20180809180044293?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMyMTQyMTI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="488"></p> 
+<p>自此，我们就完成了新安装的centos系统中的两个python版本的全部流程。</p> 
+<p>在小黑框中输入python2则调起python2，输入python，则默认调起python3，pip2调起python2下的pip，pip调起python下的pip。</p>
+                </div><div><div></div></div>
+        </div>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1601,6 +1571,84 @@
 </blockquote>
 <p><img src="https://img-blog.csdnimg.cn/direct/4886b7589e7f403cb87638e5ffc9d3ce.png"><br>发送窗口 + 可用窗口 &#x3D; 窗口的大小<br>当可用窗口为0时，无法再接收数据。</p>
 <p>当ACK应答之后<br><img src="https://img-blog.csdnimg.cn/direct/187b5fee58d2491f9f087da465ba01db.png"><br>可用窗口变大，则可以继续发送。</p>
+]]></content>
+      <categories>
+        <category>tcp</category>
+      </categories>
+      <tags>
+        <tag>tcp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OSI七层模型和TCP_IP四层(五层)模型知识汇总</title>
+    <url>/2024/01/18/network/OSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%92%8CTCP_IP%E5%9B%9B%E5%B1%82(%E4%BA%94%E5%B1%82)%E6%A8%A1%E5%9E%8B%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<ul>
+<li><a href="#%E4%B8%80%E4%BB%80%E4%B9%88%E6%98%AFosi%E6%A8%A1%E5%9E%8B">一、什么是OSI模型？</a><ul>
+<li><a href="#11%E5%AE%9A%E4%B9%89">1.1定义：</a></li>
+<li><a href="#12-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84">1.2 网络结构：</a></li>
+<li><a href="#13-%E6%80%BB%E8%A7%88%E5%9B%BE">1.3 总览图</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C%E4%BB%80%E4%B9%88%E6%98%AFtcpip%E6%A8%A1%E5%9E%8B">二、什么是TCP&#x2F;IP模型</a><ul>
+<li><a href="#21-%E5%AE%9A%E4%B9%89">2.1 定义：</a></li>
+<li><a href="#22-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E5%9B%9B%E5%B1%82%E4%BA%94%E5%B1%82">2.2 网络结构(四层&#x2F;五层)</a></li>
+<li><a href="#23-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%895%E5%B1%82%E6%9E%B6%E6%9E%84">2.3 为什么会有5层架构？</a></li>
+<li><a href="#24-%E6%80%BB%E8%A7%88%E5%9B%BE">2.4 总览图</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB">三、关系与区别</a><ul>
+<li><a href="#31-%E6%80%BB%E8%A7%88%E5%9B%BE">3.1 总览图</a></li>
+<li><a href="#32-%E5%85%B3%E7%B3%BB">3.2 关系</a></li>
+<li><a href="#33-%E5%8C%BA%E5%88%AB">3.3 区别</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">参考文献：</a></li>
+</ul>
+<h3 id="一、什么是OSI模型？"><a href="#一、什么是OSI模型？" class="headerlink" title="一、什么是OSI模型？"></a>一、什么是OSI模型？</h3><h4 id="1-1定义："><a href="#1-1定义：" class="headerlink" title="1.1定义："></a><a href="https://wenku.baidu.com/view/6025b70e6c85ec3a87c2c512.html?_wkts_=1705544418111&bdQuery=%E4%BB%80%E4%B9%88%E6%98%AFOSI%E5%8D%8F%E8%AE%AE">1.1定义</a>：</h4><blockquote>
+<p>OSI（Open system interconnect）,即开放式系统互联。一般叫OSI参考模型，是 <strong>ISO（国际标准化组织）</strong> 在1985年研究的网络互联模型，用于计算机或通信系统间互联的标准体系。。ISO为了使网络更为普及，推出了OSI模型。其含义就是推荐所有公司使用这个规范来控制网络。这样所有的公司就有了相同的规范，就可以进行互联。</p>
+</blockquote>
+<h4 id="1-2-网络结构："><a href="#1-2-网络结构：" class="headerlink" title="1.2 网络结构："></a>1.2 网络结构：</h4><p>从上(贴近用户侧)到下依次为：</p>
+<ol>
+<li><strong>应用层</strong>：为用户的应用程序提供网络服务。应用层是OSI参考模型的最高层，是用户与网络的接口。</li>
+<li><strong>表现层</strong>：将信息表示为一定形式和格式的数据流。表示层处理流经结点的数据编码的表示方式问题，以保证一个系统应用层发出的信息可被另一系统的应用层读出。数据格式化、数据加密</li>
+<li><strong>会话层</strong>：负责通信主机之间会话的建立、管理和拆除，协调通信双方的会话。会话层主要功能是管理和协调不同主机上各种进程之间的通信（对话），即负责建立、管理和终止应用程序之间的会话建立、管理和维护会话</li>
+<li><strong>传输层</strong>：负责通信主机间端到端的连接。传输层的作用是为上层协议提供端到端的可靠和透明的数据传输服务，包括处理差错控制和流量控制等问题。</li>
+<li><strong>网络层</strong>：负责将分组从源机送到目的机，包括寻址和最优路径选择等。网络层是为传输层提供服务的，传送的协议数据单元称为数据包或分组。</li>
+<li><strong>数据链路层</strong>：提供可靠的帧传递，实现差错控制、流控等等。数据链路层是为网络层提供服务的，解决两个相邻结点之间的通信问题。</li>
+<li><strong>物理层</strong>：提供透明的比特流（01流）传递。物理层是OSI参考模型的最低层，它利用传输介质为数据链路层提供物理连接。</li>
+</ol>
+<h4 id="1-3-总览图"><a href="#1-3-总览图" class="headerlink" title="1.3 总览图"></a>1.3 总览图</h4><p><img src="https://img-blog.csdnimg.cn/direct/55f6da17f9e8424ab45e2bfb0b99ad65.png"></p>
+<h3 id="二、什么是TCP-IP模型"><a href="#二、什么是TCP-IP模型" class="headerlink" title="二、什么是TCP&#x2F;IP模型"></a>二、什么是TCP&#x2F;IP模型</h3><h4 id="2-1-定义："><a href="#2-1-定义：" class="headerlink" title="2.1 定义："></a>2.1 定义：</h4><blockquote>
+<p> <strong>TCP&#x2F;IP（Transmission Control Protocol&#x2F;Internet Protocol，传输控制协议&#x2F;网际协议）</strong> 是指能够在多个不同网络间实现信息传输的协议簇。TCP&#x2F;IP协议不仅仅指的是TCP 和IP两个协议，而是指一个由FTP、SMTP、TCP、UDP、IP等协议构成的协议簇， 只是因为在TCP&#x2F;IP协议中TCP协议和IP协议最具代表性，所以被称为TCP&#x2F;IP协议</p>
+</blockquote>
+<h4 id="2-2-网络结构-四层-五层"><a href="#2-2-网络结构-四层-五层" class="headerlink" title="2.2 网络结构(四层&#x2F;五层)"></a>2.2 网络结构(四层&#x2F;五层)</h4><p>从上(贴近用户侧)到下依次为：</p>
+<ol>
+<li><strong>应用层</strong>：应用层的任务是通过应用进程间的交互来完成特定网络应用。对于不同的网络应用需要不同的应用层协议。例如，HTTP、FTP、SMTP协议等。我们把应用层交互的数据单元称为<strong>报文</strong>。</li>
+<li><strong>传输层</strong>：为两台主机进程之间的通信提供通用的<strong>数据传输服务</strong>，保证了数据包的顺序传送及数据的完整性。包含两种协议：TCP、UDP</li>
+<li><strong>网络层</strong>：主要解决主机到主机的通信问题。(互联网使用的网络层协议是无连接的网际协议（Intert Protocol）和许多路由选择协议，因此互联网的网络层也叫做网际层或IP层)。 在发送数据时，网络层把运输层产生的报文段或用户数据报封装成分组和包进行传送。在 TCP&#x2F;IP 体系结构中，由于<strong>网络层使用 IP 协议</strong>，因此分组也叫 <strong>IP 数据报</strong> ，简称 数据报。</li>
+<li><strong>网络接口层</strong>：负责监视数据在主机和网络之间的交换。</li>
+</ol>
+<h4 id="2-3-为什么会有5层架构？"><a href="#2-3-为什么会有5层架构？" class="headerlink" title="2.3 为什么会有5层架构？"></a>2.3 为什么会有5层架构？</h4><blockquote>
+<p>还有一种是五层协议的体系结构，是 <strong>专门为介绍网络原理(为了学术学习)</strong> 而设计的，与TCP&#x2F;IP四层模型唯一不同的就是将网络接口层分为了数据链路层和物理层，在实际的<strong>应用中还是使用TCP&#x2F;IP四层模型的</strong>。</p>
+</blockquote>
+<h4 id="2-4-总览图"><a href="#2-4-总览图" class="headerlink" title="2.4 总览图"></a>2.4 总览图</h4><p><img src="https://img-blog.csdnimg.cn/direct/ad0542d7ff53413abbc5474f4ad86fa7.png"></p>
+<h3 id="三、关系与区别"><a href="#三、关系与区别" class="headerlink" title="三、关系与区别"></a>三、关系与区别</h3><h4 id="3-1-总览图"><a href="#3-1-总览图" class="headerlink" title="3.1 总览图"></a>3.1 总览图</h4><p><img src="https://img-blog.csdnimg.cn/direct/2dfb43a49f4c4e51b0c96fb4ef5262b2.png"></p>
+<h4 id="3-2-关系"><a href="#3-2-关系" class="headerlink" title="3.2 关系"></a>3.2 关系</h4><ol>
+<li>TCP&#x2F;IP四层模型是OSI七层模型的简化版，但是大致的核心内容是很类似的。</li>
+<li>OSI引入了服务、接口、协议、分层的概念，而TCP&#x2F;IP借鉴了OSI的概念。</li>
+<li>OSI先有模型，后有协议，先有标准，后进行实践，而TCP&#x2F;IP先有协议和应用再提出了模型，且是参照的OSI模型。</li>
+<li>OSI虽然是官方提出的，但是由于一些原因，在它被完善之前，由民间开发的TCP&#x2F;IP早已投入实际使用了，所以它几乎是只存在与教科书中，并没有大范围地投入使用。</li>
+</ol>
+<h4 id="3-3-区别"><a href="#3-3-区别" class="headerlink" title="3.3 区别"></a>3.3 区别</h4><ol>
+<li>TCP&#x2F;IP他是一个<strong>协议簇</strong>；而OSI（开放系统互联）则是一个<strong>模型</strong>，且TCP&#x2F;IP的开发时间在OSI之前。</li>
+<li>TCP&#x2F;IP是由一些交互性的模块做成的分层次的协议，其中每个模块提供特定的功能；OSi则指定了哪个功能是属于哪一层的。</li>
+<li>TCP&#x2F;IP是<strong>四层&#x2F;五层</strong>结构，而OSI是<strong>七层结构</strong>。OSI的最高三层在TCP中用应用层表示，在TCP&#x2F;IP四层结构中将OSI最后两层表示为了网络接口层。</li>
+</ol>
+<h3 id="参考文献："><a href="#参考文献：" class="headerlink" title="参考文献："></a>参考文献：</h3><ul>
+<li><a href="https://www.php.cn/faq/494920.html">osi和tcp&#x2F;ip的区别和联系是什么</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/268196525">OSI七层模型和TCP&#x2F;IP四层模型以及五层模型</a></li>
+</ul>
+<p>Author：黑猫</p>
 ]]></content>
       <categories>
         <category>tcp</category>
@@ -1711,54 +1759,6 @@
       </tags>
   </entry>
   <entry>
-    <title>opencv打包成exe在win7运行报错</title>
-    <url>/2021/03/26/python/opencv%E6%89%93%E5%8C%85%E6%88%90exe%E5%9C%A8win7%E8%BF%90%E8%A1%8C%E6%8A%A5%E9%94%99/</url>
-    <content><![CDATA[<h2 id="opencv打包成exe在win7运行报错"><a href="#opencv打包成exe在win7运行报错" class="headerlink" title="opencv打包成exe在win7运行报错"></a>opencv打包成exe在win7运行报错</h2><p><strong>1、安装过程错误警告</strong><br>opencv版本：3.4.3<br>打包环境：win10<br>运行环境：win7<br>opencv报错：</p>
-<p><img src="https://img-blog.csdnimg.cn/20210326111826691.png"></p>
-<p><strong>2、解决方案</strong><br><a href="https://pan.baidu.com/s/1qXt1BNClftx6fE5aAQWrsw">opencv插件打包</a><br>提取码: fp7v<br>将 api-ms-win-downlevel-shlwapi-l1-1-0.dll【System32】 放到 c:\windows\System32<br>将api-ms-win-downlevel-shlwapi-l1-1-0.dll【SysWOW64】 放到C:\Windows\SysWOW64<br>打包环境与运行环境都需要添加dll文件；重新打包、安装；<br><strong>3、注意</strong><br>opencv&gt;3.4.3将出现:<br>    CAP_IMAGES: can‘t find starting number (in the name of file)<br>    错误，提示缺少文件，或没有编号。暂无解决。</p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>python中threading开启关闭线程</title>
-    <url>/2021/03/18/python/python%E4%B8%ADthreading%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%E7%BA%BF%E7%A8%8B/</url>
-    <content><![CDATA[<h2 id="python中threading开启关闭线程"><a href="#python中threading开启关闭线程" class="headerlink" title="python中threading开启关闭线程"></a>python中threading开启关闭线程</h2><blockquote>
-<p><a href="https://blog.csdn.net/qq_15181569/article/details/93299164">https://blog.csdn.net/qq_15181569/article/details/93299164</a></p>
-</blockquote>
-<p><a href="https://blog.csdn.net/qq_15181569/article/details/93299164">python中threading开启关闭线程</a></p>
-<p><strong>一、启动线程</strong><br>首先导入threading</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">myThread = threading.Thread(target=serial_read)</span><br><span class="line">myThread.start()</span><br></pre></td></tr></table></figure>
-<p><strong>二、停止线程</strong><br>不多说了直接上代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> inspect</span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_async_raise</span>(<span class="params">tid, exctype</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;raises the exception, performs cleanup if needed&quot;&quot;&quot;</span></span><br><span class="line">    tid = ctypes.c_long(tid)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> inspect.isclass(exctype):</span><br><span class="line">        exctype = <span class="built_in">type</span>(exctype)</span><br><span class="line">    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(exctype))</span><br><span class="line">    <span class="keyword">if</span> res == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">&quot;invalid thread id&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> res != <span class="number">1</span>:</span><br><span class="line">        <span class="comment"># &quot;&quot;&quot;if it returns a number greater than one, you&#x27;re in trouble,</span></span><br><span class="line">        <span class="comment"># and you should call it again with exc=NULL to revert the effect&quot;&quot;&quot;</span></span><br><span class="line">        ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, <span class="literal">None</span>)</span><br><span class="line">        <span class="keyword">raise</span> SystemError(<span class="string">&quot;PyThreadState_SetAsyncExc failed&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">stop_thread</span>(<span class="params">thread</span>):</span><br><span class="line">    _async_raise(thread.ident, SystemExit)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">stop_thread(myThread)</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>unity的button按钮组件与toggle组件的点击事件的移除</title>
-    <url>/2021/08/10/unity/unity%E7%9A%84button%E6%8C%89%E9%92%AE%E7%BB%84%E4%BB%B6%E4%B8%8Etoggle%E7%BB%84%E4%BB%B6%E7%9A%84%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%A7%BB%E9%99%A4/</url>
-    <content><![CDATA[<p>button按钮添加点击事件可以使用这种形式：<br><img src="https://img-blog.csdnimg.cn/63db9678898a478599560035ef6a3009.png"><br>移除某个事件使用SonObj.GetComponent<Button>().onClick.RemoveListener（call）方法移除某个事件。<br>RemoveListener中需要传递的参数为 UnityAction类型：<br><img src="https://img-blog.csdnimg.cn/af95d67fa5644bf68d03710535017543.png"><br>因此，在创建监听事件时，可以将点击事件提取出来，<br><img src="https://img-blog.csdnimg.cn/e853bbcdfba04de1b11da2f98904e307.png"><br>在想要移除此次添加的点击事件时，将call传递给RemoveListener就行。<br><img src="https://img-blog.csdnimg.cn/a33d2fd5567f4b758d95cd98f0e2dabd.png"></p>
-]]></content>
-      <categories>
-        <category>unity</category>
-      </categories>
-      <tags>
-        <tag>unity</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Django 全局获取request</title>
     <url>/2023/03/14/python/django/Django%20%E5%85%A8%E5%B1%80%E8%8E%B7%E5%8F%96request/</url>
     <content><![CDATA[<ul>
@@ -1862,6 +1862,55 @@
 <p>继承的是这个方法点击<br><img src="https://img-blog.csdnimg.cn/3186f2e59f5c46fa89a1eebed780115a.png"><br>鼠标滚动找到复制这个 放到urls.py路由中<br><img src="https://img-blog.csdnimg.cn/17530b78373445519333e717515a2c39.png"></p>
 <h1 id="五、解析器-parser"><a href="#五、解析器-parser" class="headerlink" title="五、解析器(parser)"></a>五、解析器(parser)</h1><p><img src="https://img-blog.csdnimg.cn/3c4ca87c6e574be98832f3c0a1c70b19.png"><br><img src="https://img-blog.csdnimg.cn/a6d8ebc87e894252ad30b5aa60068e4f.png"><br><img src="https://img-blog.csdnimg.cn/578cf07560fa46c28007c3e7381446d8.png"><br><img src="https://img-blog.csdnimg.cn/e8880570969140869140bf85a0835947.png"><br><img src="https://img-blog.csdnimg.cn/4f97d50d6c4448319f40b9c845a2f22a.png"><br><img src="https://img-blog.csdnimg.cn/33180d1749ac4c1ab0281536e83301d2.png"><br><img src="https://img-blog.csdnimg.cn/0755a098866947c2a59589cdadcd4db8.png"><br><img src="https://img-blog.csdnimg.cn/2d15592a688344df96d6d2987b4c1576.png"><br><img src="https://img-blog.csdnimg.cn/2b47b76026d74b57b932d8be04b85410.png"></p>
 <h1 id="六、序列化器"><a href="#六、序列化器" class="headerlink" title="六、序列化器"></a>六、序列化器</h1><p><img src="https://img-blog.csdnimg.cn/3db1268561f44eb8b9f3de2b9be77fd7.png"></p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>django</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>django bulk_update_or_create 批量创建更新</title>
+    <url>/2023/03/14/python/django/django%20bulk_update_or_create%20%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E6%9B%B4%E6%96%B0/</url>
+    <content><![CDATA[<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E4%B8%80%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">一、代码实现</a></li>
+<li><a href="#%E4%BA%8C%E4%BD%BF%E7%94%A8">二、使用</a></li>
+</ul>
+<hr>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当前django并没有提供能够批量创建或更新的方法，只有<code>bulk_update</code> 和<code>bulk_create</code>以及<code>create_or_update</code>，在实际业务中并不能满足我们的需求。因此才会有了<code>bulk_update_or_create </code></p>
+<hr>
+<h1 id="一、代码实现"><a href="#一、代码实现" class="headerlink" title="一、代码实现"></a>一、代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> utils <span class="keyword">import</span> time_tools</span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> transaction</span><br><span class="line"><span class="comment"># from bulk_update_or_create import BulkUpdateOrCreateQuerySet</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ExpandQuerySet</span>(models.QuerySet):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    拓展querySet</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">bulk_update_or_create</span>(<span class="params">self, common_keys, unique_key_name, unique_key_to_defaults, batch_size=<span class="number">200</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        common_keys: &#123;field_name: field_value&#125; 通用筛选条件</span></span><br><span class="line"><span class="string">        unique_key_name: field_name # 唯一字段</span></span><br><span class="line"><span class="string">        unique_key_to_defaults: &#123;field_value: &#123;field_name: field_value&#125;&#125; # 更新值</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">with</span> transaction.atomic(using=self.db, savepoint=<span class="literal">False</span>):</span><br><span class="line">            filter_kwargs = <span class="built_in">dict</span>(common_keys)</span><br><span class="line">            filter_kwargs[<span class="string">f&quot;<span class="subst">&#123;unique_key_name&#125;</span>__in&quot;</span>] = unique_key_to_defaults.keys()</span><br><span class="line">            existing_objs = &#123;</span><br><span class="line">                <span class="built_in">getattr</span>(obj, unique_key_name): obj</span><br><span class="line">                <span class="keyword">for</span> obj <span class="keyword">in</span> self.<span class="built_in">filter</span>(**filter_kwargs).select_for_update()</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment"># 批量创建</span></span><br><span class="line">            create_data = &#123;</span><br><span class="line">                k: v <span class="keyword">for</span> k, v <span class="keyword">in</span> unique_key_to_defaults.items() <span class="keyword">if</span> k <span class="keyword">not</span> <span class="keyword">in</span> existing_objs</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> unique_key_value, obj <span class="keyword">in</span> create_data.items():</span><br><span class="line">                obj[unique_key_name] = unique_key_value</span><br><span class="line">                obj.update(common_keys)</span><br><span class="line">            creates = [self.model(**obj_data) <span class="keyword">for</span> obj_data <span class="keyword">in</span> create_data.values()]</span><br><span class="line">            <span class="keyword">if</span> creates:</span><br><span class="line">                self.bulk_create(creates, batch_size=batch_size)</span><br><span class="line">            <span class="comment"># 如果使用了add_now来自动更新时间，update_fields必须包含此字段</span></span><br><span class="line">            <span class="comment"># 因queryset.update不会自动更新时间，只有save会</span></span><br><span class="line">            update_fields = &#123;<span class="string">&quot;update_time&quot;</span>&#125;</span><br><span class="line">            <span class="comment"># 批量更新</span></span><br><span class="line">            updates = []</span><br><span class="line">            <span class="keyword">for</span> key, obj <span class="keyword">in</span> existing_objs.items():</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> unique_key_to_defaults[key].items():</span><br><span class="line">                    <span class="built_in">setattr</span>(obj, i[<span class="number">0</span>], i[<span class="number">1</span>])</span><br><span class="line">                <span class="comment"># 将所有要更新的字段都统计出来</span></span><br><span class="line">                update_fields.update(unique_key_to_defaults[key].keys())</span><br><span class="line">                updates.append(obj)</span><br><span class="line">            <span class="keyword">if</span> existing_objs:</span><br><span class="line">                self.bulk_update(updates, update_fields, batch_size=batch_size)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(creates), <span class="built_in">len</span>(updates)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">update</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">getattr</span>(self.model, <span class="string">&quot;update_time&quot;</span>, <span class="literal">None</span>):</span><br><span class="line">            kwargs.update(&#123;<span class="string">&quot;update_time&quot;</span>: time_tools.now()&#125;)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">super</span>().update(**kwargs)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AbstractModel</span>(models.Model):</span><br><span class="line">    objects: ExpandQuerySet = ExpandQuerySet.as_manager()</span><br></pre></td></tr></table></figure>
+<p>我们需要在我们的模型基类中重定义objects为我们的扩展类。<br>bulk_update_or_create共分为三步：1、查询数据库中包含当前数据的数据。2、调用父类批量创建<code>bulk_create</code>方法，批量创建数据库中不存在的。3、调用父类批量更新<code>bulk_update</code>方法，批量更新数据库中存在的。<br>ps:我们会在批量更新中定义一个<code>update_fields = &#123;&quot;update_time&quot;&#125;</code>字段，<br>因为如果使用了add_now来自动更新时间，query.update 不会更新此此段，只有save中会，在save中对包含add_now的字段做了处理.</p>
+<h1 id="二、使用"><a href="#二、使用" class="headerlink" title="二、使用"></a>二、使用</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">bulk_create_or_update_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> self._contents:</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;url&quot;</span> <span class="keyword">in</span> _:</span><br><span class="line">        unique = _[<span class="string">&quot;unique&quot;</span>]</span><br><span class="line">        permission_dict = &#123;</span><br><span class="line">            Permission.name.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.valid.field.attname: <span class="literal">True</span>,</span><br><span class="line">            Permission.desc.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.level.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.uri.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.lambda_name.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.action_name.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.permission.field.attname: unique</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        bulk_create_or_update_dict[unique] = permission_dict</span><br><span class="line">common_keys = &#123;&#125;  <span class="comment"># 通用筛选项</span></span><br><span class="line">unique_key_name = Permission.permission.field.attname  <span class="comment"># 唯一值</span></span><br><span class="line">unique_key_to_defaults = bulk_create_or_update_dict  <span class="comment"># 默认值</span></span><br><span class="line">Permission.objects.using(PG_WRITE).bulk_update_or_create(common_keys, unique_key_name, unique_key_to_defaults)</span><br></pre></td></tr></table></figure>
+<p><code>common_keys :</code>字典，通用的筛选项，会传递到orm的filter中<br><code>unique_key_name :</code>字符串，唯一的字段的名称<br><code>unique_key_to_defaults :</code>字典，key为唯一的值，value为更新的数据</p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>django</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>django rest_framework认证梳理</title>
+    <url>/2020/11/29/python/django/django%20rest_framework%E8%AE%A4%E8%AF%81%E6%A2%B3%E7%90%86/</url>
+    <content><![CDATA[<p>请主人通过self.dispatch()入口查看源码。<br>看了一大堆，源码最清楚！！！！<br>1、<br><img src="https://img-blog.csdnimg.cn/20201129165015745.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70" alt="使用"><br>2、流程：<br><img src="https://img-blog.csdnimg.cn/20201129165117920.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70"><br>    1、入口：self.dispatch()<br>    2、对request进行封装：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">request = self.initialize_request(request, *args, **kwargs)</span><br><span class="line">        self.request = request</span><br></pre></td></tr></table></figure>
+<pre><code>    获取定义的认证类（全局/局部），通过列表生成式创建对象进行认证
+    如果未定义认证类列表，则使用默认的两个认证类
+</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">def</span> <span class="title function_">initialize_request</span>(<span class="params">self, request, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Returns the initial request object.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        parser_context = self.get_parser_context(request)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Request(</span><br><span class="line">            request,</span><br><span class="line">            parsers=self.get_parsers(),</span><br><span class="line">            authenticators=self.get_authenticators(),<span class="comment">#认证</span></span><br><span class="line">            negotiator=self.get_content_negotiator(),</span><br><span class="line">            parser_context=parser_context</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_authenticators</span>(<span class="params">self</span>):</span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Instantiates and returns the list of authenticators that this view can use.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> [auth() <span class="keyword">for</span> auth <span class="keyword">in</span> self.authentication_classes]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#默认认证列表</span></span><br><span class="line">authentication_classes = api_settings.DEFAULT_AUTHENTICATION_CLASSES</span><br></pre></td></tr></table></figure>
+<p>3、对request进行加工后，进行认证<br>#遍历认证列表。如果子类中没有，则使用父类的默认的认证类。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;DEFAULT_AUTHENTICATION_CLASSES&#x27;</span>: [<span class="string">&#x27;rest_framework.authentication.SessionAuthentication&#x27;</span>,</span><br><span class="line">       <span class="string">&#x27;rest_framework.authentication.BasicAuthentication&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>,认证抛异常之前设置self.user为匿名用户，最后再抛异常。<br>            self.dispatch()接受异常，返回</p>
+<p>self.initial(request, *args, **kwargs)<br>    &nbsp;&nbsp;&nbsp;&nbsp; -self.perform_authentication(request)<br>    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; -request.user(内部循环认证)<br>    #如果第一个认证没有通过，并且抛异常，直接返回。<br>        #如果第一个认证没有通过，并且返回None，则继续下一个认证<br>        #第一个认证通过，直接退出<br>        #认证未通过，或者抛异常，调用self._not_authenticated()，设置匿名用户，并且抛出异常，接着self.dispatch()捕获异常</p>
 ]]></content>
       <categories>
         <category>python</category>
@@ -2067,68 +2116,6 @@
       </tags>
   </entry>
   <entry>
-    <title>django rest_framework认证梳理</title>
-    <url>/2020/11/29/python/django/django%20rest_framework%E8%AE%A4%E8%AF%81%E6%A2%B3%E7%90%86/</url>
-    <content><![CDATA[<p>请主人通过self.dispatch()入口查看源码。<br>看了一大堆，源码最清楚！！！！<br>1、<br><img src="https://img-blog.csdnimg.cn/20201129165015745.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70" alt="使用"><br>2、流程：<br><img src="https://img-blog.csdnimg.cn/20201129165117920.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70"><br>    1、入口：self.dispatch()<br>    2、对request进行封装：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">request = self.initialize_request(request, *args, **kwargs)</span><br><span class="line">        self.request = request</span><br></pre></td></tr></table></figure>
-<pre><code>    获取定义的认证类（全局/局部），通过列表生成式创建对象进行认证
-    如果未定义认证类列表，则使用默认的两个认证类
-</code></pre>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">def</span> <span class="title function_">initialize_request</span>(<span class="params">self, request, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Returns the initial request object.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        parser_context = self.get_parser_context(request)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Request(</span><br><span class="line">            request,</span><br><span class="line">            parsers=self.get_parsers(),</span><br><span class="line">            authenticators=self.get_authenticators(),<span class="comment">#认证</span></span><br><span class="line">            negotiator=self.get_content_negotiator(),</span><br><span class="line">            parser_context=parser_context</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_authenticators</span>(<span class="params">self</span>):</span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Instantiates and returns the list of authenticators that this view can use.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> [auth() <span class="keyword">for</span> auth <span class="keyword">in</span> self.authentication_classes]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#默认认证列表</span></span><br><span class="line">authentication_classes = api_settings.DEFAULT_AUTHENTICATION_CLASSES</span><br></pre></td></tr></table></figure>
-<p>3、对request进行加工后，进行认证<br>#遍历认证列表。如果子类中没有，则使用父类的默认的认证类。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;DEFAULT_AUTHENTICATION_CLASSES&#x27;</span>: [<span class="string">&#x27;rest_framework.authentication.SessionAuthentication&#x27;</span>,</span><br><span class="line">       <span class="string">&#x27;rest_framework.authentication.BasicAuthentication&#x27;</span>]</span><br></pre></td></tr></table></figure>
-
-<p>,认证抛异常之前设置self.user为匿名用户，最后再抛异常。<br>            self.dispatch()接受异常，返回</p>
-<p>self.initial(request, *args, **kwargs)<br>    &nbsp;&nbsp;&nbsp;&nbsp; -self.perform_authentication(request)<br>    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; -request.user(内部循环认证)<br>    #如果第一个认证没有通过，并且抛异常，直接返回。<br>        #如果第一个认证没有通过，并且返回None，则继续下一个认证<br>        #第一个认证通过，直接退出<br>        #认证未通过，或者抛异常，调用self._not_authenticated()，设置匿名用户，并且抛出异常，接着self.dispatch()捕获异常</p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>django</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>django bulk_update_or_create 批量创建更新</title>
-    <url>/2023/03/14/python/django/django%20bulk_update_or_create%20%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E6%9B%B4%E6%96%B0/</url>
-    <content><![CDATA[<ul>
-<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
-<li><a href="#%E4%B8%80%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">一、代码实现</a></li>
-<li><a href="#%E4%BA%8C%E4%BD%BF%E7%94%A8">二、使用</a></li>
-</ul>
-<hr>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当前django并没有提供能够批量创建或更新的方法，只有<code>bulk_update</code> 和<code>bulk_create</code>以及<code>create_or_update</code>，在实际业务中并不能满足我们的需求。因此才会有了<code>bulk_update_or_create </code></p>
-<hr>
-<h1 id="一、代码实现"><a href="#一、代码实现" class="headerlink" title="一、代码实现"></a>一、代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> utils <span class="keyword">import</span> time_tools</span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> transaction</span><br><span class="line"><span class="comment"># from bulk_update_or_create import BulkUpdateOrCreateQuerySet</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ExpandQuerySet</span>(models.QuerySet):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    拓展querySet</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">bulk_update_or_create</span>(<span class="params">self, common_keys, unique_key_name, unique_key_to_defaults, batch_size=<span class="number">200</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        common_keys: &#123;field_name: field_value&#125; 通用筛选条件</span></span><br><span class="line"><span class="string">        unique_key_name: field_name # 唯一字段</span></span><br><span class="line"><span class="string">        unique_key_to_defaults: &#123;field_value: &#123;field_name: field_value&#125;&#125; # 更新值</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">with</span> transaction.atomic(using=self.db, savepoint=<span class="literal">False</span>):</span><br><span class="line">            filter_kwargs = <span class="built_in">dict</span>(common_keys)</span><br><span class="line">            filter_kwargs[<span class="string">f&quot;<span class="subst">&#123;unique_key_name&#125;</span>__in&quot;</span>] = unique_key_to_defaults.keys()</span><br><span class="line">            existing_objs = &#123;</span><br><span class="line">                <span class="built_in">getattr</span>(obj, unique_key_name): obj</span><br><span class="line">                <span class="keyword">for</span> obj <span class="keyword">in</span> self.<span class="built_in">filter</span>(**filter_kwargs).select_for_update()</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment"># 批量创建</span></span><br><span class="line">            create_data = &#123;</span><br><span class="line">                k: v <span class="keyword">for</span> k, v <span class="keyword">in</span> unique_key_to_defaults.items() <span class="keyword">if</span> k <span class="keyword">not</span> <span class="keyword">in</span> existing_objs</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> unique_key_value, obj <span class="keyword">in</span> create_data.items():</span><br><span class="line">                obj[unique_key_name] = unique_key_value</span><br><span class="line">                obj.update(common_keys)</span><br><span class="line">            creates = [self.model(**obj_data) <span class="keyword">for</span> obj_data <span class="keyword">in</span> create_data.values()]</span><br><span class="line">            <span class="keyword">if</span> creates:</span><br><span class="line">                self.bulk_create(creates, batch_size=batch_size)</span><br><span class="line">            <span class="comment"># 如果使用了add_now来自动更新时间，update_fields必须包含此字段</span></span><br><span class="line">            <span class="comment"># 因queryset.update不会自动更新时间，只有save会</span></span><br><span class="line">            update_fields = &#123;<span class="string">&quot;update_time&quot;</span>&#125;</span><br><span class="line">            <span class="comment"># 批量更新</span></span><br><span class="line">            updates = []</span><br><span class="line">            <span class="keyword">for</span> key, obj <span class="keyword">in</span> existing_objs.items():</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> unique_key_to_defaults[key].items():</span><br><span class="line">                    <span class="built_in">setattr</span>(obj, i[<span class="number">0</span>], i[<span class="number">1</span>])</span><br><span class="line">                <span class="comment"># 将所有要更新的字段都统计出来</span></span><br><span class="line">                update_fields.update(unique_key_to_defaults[key].keys())</span><br><span class="line">                updates.append(obj)</span><br><span class="line">            <span class="keyword">if</span> existing_objs:</span><br><span class="line">                self.bulk_update(updates, update_fields, batch_size=batch_size)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(creates), <span class="built_in">len</span>(updates)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">update</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">getattr</span>(self.model, <span class="string">&quot;update_time&quot;</span>, <span class="literal">None</span>):</span><br><span class="line">            kwargs.update(&#123;<span class="string">&quot;update_time&quot;</span>: time_tools.now()&#125;)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">super</span>().update(**kwargs)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AbstractModel</span>(models.Model):</span><br><span class="line">    objects: ExpandQuerySet = ExpandQuerySet.as_manager()</span><br></pre></td></tr></table></figure>
-<p>我们需要在我们的模型基类中重定义objects为我们的扩展类。<br>bulk_update_or_create共分为三步：1、查询数据库中包含当前数据的数据。2、调用父类批量创建<code>bulk_create</code>方法，批量创建数据库中不存在的。3、调用父类批量更新<code>bulk_update</code>方法，批量更新数据库中存在的。<br>ps:我们会在批量更新中定义一个<code>update_fields = &#123;&quot;update_time&quot;&#125;</code>字段，<br>因为如果使用了add_now来自动更新时间，query.update 不会更新此此段，只有save中会，在save中对包含add_now的字段做了处理.</p>
-<h1 id="二、使用"><a href="#二、使用" class="headerlink" title="二、使用"></a>二、使用</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">bulk_create_or_update_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> self._contents:</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;url&quot;</span> <span class="keyword">in</span> _:</span><br><span class="line">        unique = _[<span class="string">&quot;unique&quot;</span>]</span><br><span class="line">        permission_dict = &#123;</span><br><span class="line">            Permission.name.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.valid.field.attname: <span class="literal">True</span>,</span><br><span class="line">            Permission.desc.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.level.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.uri.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.lambda_name.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.action_name.field.attname: <span class="number">1</span>,</span><br><span class="line">            Permission.permission.field.attname: unique</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        bulk_create_or_update_dict[unique] = permission_dict</span><br><span class="line">common_keys = &#123;&#125;  <span class="comment"># 通用筛选项</span></span><br><span class="line">unique_key_name = Permission.permission.field.attname  <span class="comment"># 唯一值</span></span><br><span class="line">unique_key_to_defaults = bulk_create_or_update_dict  <span class="comment"># 默认值</span></span><br><span class="line">Permission.objects.using(PG_WRITE).bulk_update_or_create(common_keys, unique_key_name, unique_key_to_defaults)</span><br></pre></td></tr></table></figure>
-<p><code>common_keys :</code>字典，通用的筛选项，会传递到orm的filter中<br><code>unique_key_name :</code>字符串，唯一的字段的名称<br><code>unique_key_to_defaults :</code>字典，key为唯一的值，value为更新的数据</p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>django</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>fastapi源码流程图</title>
-    <url>/2023/08/23/python/fastapi/fastapi%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE/</url>
-    <content><![CDATA[<p>fastapi源码过程调用大致流程图<br><a href="https://www.processon.com/v/64e5810d8ae8db1df6dc590e">processon地址</a><br><img src="https://img-blog.csdnimg.cn/fb81773459e4496db24e7f643a8282d4.png"></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>fastapi</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Starlette 源码分析</title>
     <url>/2023/08/23/python/fastapi/Starlette%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<h1 id="Table-of-Contents"><a href="#Table-of-Contents" class="headerlink" title="Table of Contents"></a>Table of Contents</h1><ul>
@@ -2253,34 +2240,16 @@
       </tags>
   </entry>
   <entry>
-    <title>flask migrate创建迁移脚本无效</title>
-    <url>/2020/04/07/python/flask/flask%20migrate%E5%88%9B%E5%BB%BA%E8%BF%81%E7%A7%BB%E8%84%9A%E6%9C%AC%E6%97%A0%E6%95%88/</url>
-    <content><![CDATA[<p>前面的步骤就先不说了，也就是初始化migrate、绑定Manage。<br>1、首先使用init初始化</p>
-<p><img src="https://img-blog.csdnimg.cn/20200407172128417.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70"><br>2、生成迁移文件</p>
-<p><img src="https://img-blog.csdnimg.cn/20200407172335172.png"><br>此时可能会出现如图问题，前提是已经创建model。<br>问题所在：创建的model对象系统不知道，没有告诉系统，也就是没有实例化对象。因此需要在views中导入要迁移的model，系统才知道要迁移哪个模板。</p>
-<p>views中导入相应模块<br><img src="https://img-blog.csdnimg.cn/20200407181334290.png"></p>
+    <title>fastapi源码流程图</title>
+    <url>/2023/08/23/python/fastapi/fastapi%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE/</url>
+    <content><![CDATA[<p>fastapi源码过程调用大致流程图<br><a href="https://www.processon.com/v/64e5810d8ae8db1df6dc590e">processon地址</a><br><img src="https://img-blog.csdnimg.cn/fb81773459e4496db24e7f643a8282d4.png"></p>
 ]]></content>
       <categories>
         <category>python</category>
       </categories>
       <tags>
         <tag>python</tag>
-        <tag>flask</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Flask框架中自定义模型类的表名、父类相关问题分析</title>
-    <url>/2020/04/09/python/flask/Flask%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9E%8B%E7%B1%BB%E7%9A%84%E8%A1%A8%E5%90%8D%E3%80%81%E7%88%B6%E7%B1%BB%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h2 id="关于继承父类model，为子model自定义表名的设置"><a href="#关于继承父类model，为子model自定义表名的设置" class="headerlink" title="关于继承父类model，为子model自定义表名的设置"></a>关于继承父类model，为子model自定义表名的设置</h2><h2 id="1、单张表设置表名"><a href="#1、单张表设置表名" class="headerlink" title="1、单张表设置表名"></a>1、单张表设置表名</h2><p>_<em>tablename</em>_ &#x3D; ‘model name’<br>此字段必须是继承自models.Model才可设置。<br><img src="https://img-blog.csdnimg.cn/20200409155726755.png"></p>
-<h2 id="2、有继承关系的表设置表名"><a href="#2、有继承关系的表设置表名" class="headerlink" title="2、有继承关系的表设置表名"></a>2、有继承关系的表设置表名</h2><p>如果其他model继承自BaseModel，那么__tablename__将失效，默认表名为父类表名。<br>要想自定义子类表名，需要在父类model中添加<strong>_<em>abstract</em>_ &#x3D; True</strong>字段。<br><img src="https://img-blog.csdnimg.cn/20200409160213276.png"><br><img src="https://img-blog.csdnimg.cn/20200409160229896.png"><br>这样就可以自定义表名啦。</p>
-<h2 id="3、喜欢的拿走"><a href="#3、喜欢的拿走" class="headerlink" title="3、喜欢的拿走"></a>3、喜欢的拿走</h2><p><img src="https://img-blog.csdnimg.cn/20200409160438194.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70"></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>flask</tag>
+        <tag>fastapi</tag>
       </tags>
   </entry>
   <entry>
@@ -2297,6 +2266,41 @@
 <h2 id="二、apktool"><a href="#二、apktool" class="headerlink" title="二、apktool"></a>二、apktool</h2><p>下载apktool后，打开cmd，进入此下载目录。<br>输入命令<code>apktool.bat d F:\Desktop\books爬虫\lesson2-rps-frida-test.apk</code><br><img src="https://img-blog.csdnimg.cn/77c6c67c56c543fab2aca27a07f7eea1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br>此时，会在当前目录下生成和apk名字相同的文件夹，进入<code>lesson2-rps-frida-test\smali\com\example\seccon2015\rock_paper_scissors</code><br>可以看到smail文件<br><img src="https://img-blog.csdnimg.cn/ab3eea8deb854f2db1982be2bbe36a56.png"><br><strong>MainActivity.smali</strong>文件为我们之前找到的类<br><strong>MainActivity$1.smali</strong>就是我们需要hook的属性为类类型的类了。<br>hook时，使用<strong>包名+类名</strong>即可hook</p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line"><span class="keyword">import</span> frida</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">hook_code = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Java.perform(</span></span><br><span class="line"><span class="string">    function () &#123;</span></span><br><span class="line"><span class="string">        console.log(&#x27;[*] Running CTF&#x27;)</span></span><br><span class="line"><span class="string">        var MainActivity = Java.use(&#x27;com.example.seccon2015.rock_paper_scissors.MainActivity&#x27;)</span></span><br><span class="line"><span class="string">        MainActivity.onClick.implementation = function(v)&#123;</span></span><br><span class="line"><span class="string">            // m 是默认值</span></span><br><span class="line"><span class="string">            //console.log(&#x27;m is :&#x27;+this.m.value)</span></span><br><span class="line"><span class="string">            //console.log(&#x27;n is :&#x27;+this.n.value)</span></span><br><span class="line"><span class="string">            this.onClick(v)</span></span><br><span class="line"><span class="string">            console.log(&#x27;m is :&#x27;+this.m.value)</span></span><br><span class="line"><span class="string">            console.log(&#x27;n is :&#x27;+this.n.value)</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        var TT = Java.use(&#x27;com.example.seccon2015.rock_paper_scissors.MainActivity$1&#x27;) // 从 Smali 文件找</span></span><br><span class="line"><span class="string">        TT.run.implementation = function()&#123;</span></span><br><span class="line"><span class="string">            // 内部类访问外部类的成员变量</span></span><br><span class="line"><span class="string">            // this.this$0.value.外部类属性名.value </span></span><br><span class="line"><span class="string">            // this.m.value = 1    // TypeError: cannot write property &#x27;value&#x27; of undefined</span></span><br><span class="line"><span class="string">            // this.n.value = 2</span></span><br><span class="line"><span class="string">            this.this$0.value.m.value = 1</span></span><br><span class="line"><span class="string">            this.this$0.value.n.value = 2</span></span><br><span class="line"><span class="string">            this.run()</span></span><br><span class="line"><span class="string">        &#125;  </span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">on_message</span>(<span class="params">message, data</span>):</span><br><span class="line">    <span class="keyword">if</span> message[<span class="string">&#x27;type&#x27;</span>] == <span class="string">&#x27;send&#x27;</span>:</span><br><span class="line">        <span class="built_in">print</span>(message[<span class="string">&#x27;payload&#x27;</span>])</span><br><span class="line">    <span class="keyword">elif</span> message[<span class="string">&#x27;type&#x27;</span>] == <span class="string">&#x27;error&#x27;</span>:</span><br><span class="line">        <span class="built_in">print</span>(message[<span class="string">&#x27;stack&#x27;</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># hook 已经启动的app</span></span><br><span class="line">process = frida.get_usb_device(timeout=<span class="number">1000</span>).attach(<span class="string">&#x27;com.example.seccon2015.rock_paper_scissors&#x27;</span>)</span><br><span class="line">script = process.create_script(hook_code)</span><br><span class="line">script.on(<span class="string">&#x27;message&#x27;</span>, on_message)</span><br><span class="line">script.load()</span><br><span class="line">sys.stdin.read()  <span class="comment"># 防止程序退出</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># spawn 重启app 可以hook app的启动阶段 (可能会使app闪崩)</span></span><br><span class="line"><span class="comment"># device = frida.get_usb_device(timeout=1000)</span></span><br><span class="line"><span class="comment"># pid = device.spawn([&#x27;com.example.seccon2015.rock_paper_scissors&#x27;])</span></span><br><span class="line"><span class="comment"># process = device.attach(pid)</span></span><br><span class="line"><span class="comment"># script = process.create_script(hook_code)</span></span><br><span class="line"><span class="comment"># script.on(&#x27;message&#x27;, on_message)</span></span><br><span class="line"><span class="comment"># script.load()</span></span><br><span class="line"><span class="comment"># sys.stdin.read()  # 防止程序退出</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>spider</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python firda hook配置</title>
+    <url>/2021/12/24/python/spider/python%20firda%20hook%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<ul>
+<li><a href="#%E4%B8%80firda-%E5%AE%89%E8%A3%85">一、firda 安装</a></li>
+<li><a href="#%E4%BA%8C%E5%AE%89%E8%A3%85%E6%9C%A8%E6%9C%A8%E6%A8%A1%E6%8B%9F%E5%99%A8">二、安装木木模拟器</a></li>
+<li><a href="#%E4%B8%8B%E8%BD%BDfrida%E6%9C%8D%E5%8A%A1%E7%AB%AF-android">下载frida服务端-Android</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8adb%E8%BF%9E%E6%8E%A5mumu%E6%A8%A1%E6%8B%9F%E5%99%A8">使用adb连接mumu模拟器</a></li>
+<li><a href="#python%E8%B0%83%E8%AF%95">python调试</a></li>
+<li><a href="#%E8%84%B1%E5%A3%B3">脱壳</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B">查看</a></li>
+</ul>
+<h2 id="一、firda-安装"><a href="#一、firda-安装" class="headerlink" title="一、firda 安装"></a>一、firda 安装</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install firda -i http://pypi.douban.com/simple/ </span><br><span class="line">pip install frida-tools -i http://pypi.douban.com/simple/ </span><br></pre></td></tr></table></figure>
+
+<h2 id="二、安装木木模拟器"><a href="#二、安装木木模拟器" class="headerlink" title="二、安装木木模拟器"></a>二、安装木木模拟器</h2><p><a href="http://mumu.163.com/">官网： http://mumu.163.com/</a><br><strong>开启root</strong><br><img src="https://img-blog.csdnimg.cn/965faa30d7654b16b16084cbc4b9322d.png"><br><img src="https://img-blog.csdnimg.cn/1a557606f2d547db8ad8cd11ae18f9c3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br><strong>打开模拟器USB调试<br>在开发者选项中。</strong><br><img src="https://img-blog.csdnimg.cn/19503c773a9e4452a7d7b5e6551f1c7f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br><strong>安装RE文件管理器<br>直接搜索进行下载,下载后打开给予root权限</strong><br><img src="https://img-blog.csdnimg.cn/6d104811791a40f1ba18bdde5ec19aea.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<h2 id="下载frida服务端-Android"><a href="#下载frida服务端-Android" class="headerlink" title="下载frida服务端-Android"></a>下载frida服务端-Android</h2><p><strong>下载frida-server文件</strong><br><a href="https://github.com/frida/frida/releases">到 https://github.com/frida/frida/releases 下载相应的版本（版本一定对应firda版本）</a><br><strong>移动文件到tmp下</strong><br>下载完成之后,如果你使用的本地下载,则把这个文件放入木木共享文件夹中解压,重命名为 frida-server</p>
+<p>**<img src="https://img-blog.csdnimg.cn/0e068243f7dc4b94aa483c11223cebfd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br>**<br>然后打开 RE文件管理器,使用全局搜索,找到这个文件的位置.<br><img src="https://img-blog.csdnimg.cn/7078fa0d8c034015b578ede0bf8de7b3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br>接着把 frida-server文件复制到 &#x2F;data&#x2F;local&#x2F;tmp 目录下.<br><img src="https://img-blog.csdnimg.cn/acc533f0aa5a4afca3f34fb083a6fe3d.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<h2 id="使用adb连接mumu模拟器"><a href="#使用adb连接mumu模拟器" class="headerlink" title="使用adb连接mumu模拟器"></a>使用adb连接mumu模拟器</h2><p>先找到模拟器的安装目录,然后进入 emulator\nemu\vmonitor\bin目录<br><img src="https://img-blog.csdnimg.cn/dbba4d33a4b447c28971571a0ac861c4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<p>配置adb<br>将adb_server.exe 重命名为adb.exe<br>配置全局变量<br><img src="https://img-blog.csdnimg.cn/996389ad4b8a47adbe8a6fd220ccfdb8.png"><br>1、打开cmd，输入 adb connect 127.0.0.1:7555<br>2、adb shell 进入交互环境<br>3、cd  &#x2F;data&#x2F;local&#x2F;tmp<br>4、chmod 777 frida-server  设置权限<br>5、.&#x2F;frida-server   启动服务<br>6、adb forward tcp:27042 tcp:27042    开放访问端口<br>7、打开新cmd，输入frida-ps -U，有信息则服务启动成功</p>
+<h2 id="python调试"><a href="#python调试" class="headerlink" title="python调试"></a>python调试</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> frida</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取设备信息</span></span><br><span class="line">rdev = frida.get_remote_device()</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取在前台运行的APP</span></span><br><span class="line">front_app = rdev.get_frontmost_application()</span><br><span class="line"><span class="built_in">print</span> (front_app)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>案例</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> frida</span><br><span class="line">rdev = frida.get_remote_device()</span><br><span class="line"><span class="comment">#获取在前台运行的APP</span></span><br><span class="line">front_app = rdev.get_frontmost_application()</span><br><span class="line"><span class="built_in">print</span> (front_app)</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">res = re.findall(<span class="string">r&quot;pid=(.*?),&quot;</span>,<span class="built_in">str</span>(front_app))</span><br><span class="line"><span class="comment"># 枚举进程中加载指定模块中的导出函数</span></span><br><span class="line">session = rdev.attach(<span class="built_in">int</span>(res[<span class="number">0</span>]))   <span class="comment"># 也可以使用attach(pid)的方式</span></span><br><span class="line">jscode = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Java.perform(function()&#123;</span></span><br><span class="line"><span class="string">    var temp = Java.use(&#x27;com.xunyou.libservice.server.impl.ServerApi&#x27;);</span></span><br><span class="line"><span class="string">    var ServerParams = Java.use(&#x27;com.xunyou.libservice.server.impl.ServerParams&#x27;);</span></span><br><span class="line"><span class="string">        temp.e.overload(&#x27;org.json.JSONObject&#x27;).implementation = function(a)&#123;</span></span><br><span class="line"><span class="string">            var result = this.e(a);  </span></span><br><span class="line"><span class="string">            send(hasmap_parse(result));</span></span><br><span class="line"><span class="string">            return result;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    function hasmap_parse(result)&#123;</span></span><br><span class="line"><span class="string">     var test = result.toString();</span></span><br><span class="line"><span class="string">            var keyset = result.keySet();</span></span><br><span class="line"><span class="string">            var it = keyset.iterator();</span></span><br><span class="line"><span class="string">            while(it.hasNext())&#123;</span></span><br><span class="line"><span class="string">                var keystr = it.next().toString();</span></span><br><span class="line"><span class="string">                var valuestr = result.get(keystr).toString();</span></span><br><span class="line"><span class="string">                test +=keystr+&quot;:&quot;+ valuestr+&quot;;&quot;;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        return test;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;);</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">script = session.create_script(jscode)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">on_message</span>(<span class="params">message, data</span>):</span><br><span class="line">    <span class="built_in">print</span>(message)</span><br><span class="line">script.on(<span class="string">&#x27;message&#x27;</span>, on_message)</span><br><span class="line">script.load()</span><br><span class="line">sys.stdin.read()</span><br></pre></td></tr></table></figure>
+
+<h2 id="脱壳"><a href="#脱壳" class="headerlink" title="脱壳"></a>脱壳</h2><p>使用frida_dexdump 强制脱壳，可脱壳已加固<br><a href="https://github.com/hluwa/FRIDA-DEXDump">下载地址</a></p>
+<p><strong>使用</strong><br>在模拟器上运行app后，执行 python main.py<br>脱壳后的文件将保存到当前目录<br><img src="https://img-blog.csdnimg.cn/0b72dbbf35f946ac87c728e2ec754900.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_14,color_FFFFFF,t_70,g_se,x_16"></p>
+<h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><p>使用jadx-gui查看源代码（拖进去即可）<br><img src="https://img-blog.csdnimg.cn/f0e7f3b82ecf471c881ea461e28c4265.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
 ]]></content>
       <categories>
         <category>python</category>
@@ -2364,38 +2368,34 @@
       </tags>
   </entry>
   <entry>
-    <title>python firda hook配置</title>
-    <url>/2021/12/24/python/spider/python%20firda%20hook%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<ul>
-<li><a href="#%E4%B8%80firda-%E5%AE%89%E8%A3%85">一、firda 安装</a></li>
-<li><a href="#%E4%BA%8C%E5%AE%89%E8%A3%85%E6%9C%A8%E6%9C%A8%E6%A8%A1%E6%8B%9F%E5%99%A8">二、安装木木模拟器</a></li>
-<li><a href="#%E4%B8%8B%E8%BD%BDfrida%E6%9C%8D%E5%8A%A1%E7%AB%AF-android">下载frida服务端-Android</a></li>
-<li><a href="#%E4%BD%BF%E7%94%A8adb%E8%BF%9E%E6%8E%A5mumu%E6%A8%A1%E6%8B%9F%E5%99%A8">使用adb连接mumu模拟器</a></li>
-<li><a href="#python%E8%B0%83%E8%AF%95">python调试</a></li>
-<li><a href="#%E8%84%B1%E5%A3%B3">脱壳</a></li>
-<li><a href="#%E6%9F%A5%E7%9C%8B">查看</a></li>
-</ul>
-<h2 id="一、firda-安装"><a href="#一、firda-安装" class="headerlink" title="一、firda 安装"></a>一、firda 安装</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install firda -i http://pypi.douban.com/simple/ </span><br><span class="line">pip install frida-tools -i http://pypi.douban.com/simple/ </span><br></pre></td></tr></table></figure>
-
-<h2 id="二、安装木木模拟器"><a href="#二、安装木木模拟器" class="headerlink" title="二、安装木木模拟器"></a>二、安装木木模拟器</h2><p><a href="http://mumu.163.com/">官网： http://mumu.163.com/</a><br><strong>开启root</strong><br><img src="https://img-blog.csdnimg.cn/965faa30d7654b16b16084cbc4b9322d.png"><br><img src="https://img-blog.csdnimg.cn/1a557606f2d547db8ad8cd11ae18f9c3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br><strong>打开模拟器USB调试<br>在开发者选项中。</strong><br><img src="https://img-blog.csdnimg.cn/19503c773a9e4452a7d7b5e6551f1c7f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br><strong>安装RE文件管理器<br>直接搜索进行下载,下载后打开给予root权限</strong><br><img src="https://img-blog.csdnimg.cn/6d104811791a40f1ba18bdde5ec19aea.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
-<h2 id="下载frida服务端-Android"><a href="#下载frida服务端-Android" class="headerlink" title="下载frida服务端-Android"></a>下载frida服务端-Android</h2><p><strong>下载frida-server文件</strong><br><a href="https://github.com/frida/frida/releases">到 https://github.com/frida/frida/releases 下载相应的版本（版本一定对应firda版本）</a><br><strong>移动文件到tmp下</strong><br>下载完成之后,如果你使用的本地下载,则把这个文件放入木木共享文件夹中解压,重命名为 frida-server</p>
-<p>**<img src="https://img-blog.csdnimg.cn/0e068243f7dc4b94aa483c11223cebfd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br>**<br>然后打开 RE文件管理器,使用全局搜索,找到这个文件的位置.<br><img src="https://img-blog.csdnimg.cn/7078fa0d8c034015b578ede0bf8de7b3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"><br>接着把 frida-server文件复制到 &#x2F;data&#x2F;local&#x2F;tmp 目录下.<br><img src="https://img-blog.csdnimg.cn/acc533f0aa5a4afca3f34fb083a6fe3d.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
-<h2 id="使用adb连接mumu模拟器"><a href="#使用adb连接mumu模拟器" class="headerlink" title="使用adb连接mumu模拟器"></a>使用adb连接mumu模拟器</h2><p>先找到模拟器的安装目录,然后进入 emulator\nemu\vmonitor\bin目录<br><img src="https://img-blog.csdnimg.cn/dbba4d33a4b447c28971571a0ac861c4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
-<p>配置adb<br>将adb_server.exe 重命名为adb.exe<br>配置全局变量<br><img src="https://img-blog.csdnimg.cn/996389ad4b8a47adbe8a6fd220ccfdb8.png"><br>1、打开cmd，输入 adb connect 127.0.0.1:7555<br>2、adb shell 进入交互环境<br>3、cd  &#x2F;data&#x2F;local&#x2F;tmp<br>4、chmod 777 frida-server  设置权限<br>5、.&#x2F;frida-server   启动服务<br>6、adb forward tcp:27042 tcp:27042    开放访问端口<br>7、打开新cmd，输入frida-ps -U，有信息则服务启动成功</p>
-<h2 id="python调试"><a href="#python调试" class="headerlink" title="python调试"></a>python调试</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> frida</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取设备信息</span></span><br><span class="line">rdev = frida.get_remote_device()</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取在前台运行的APP</span></span><br><span class="line">front_app = rdev.get_frontmost_application()</span><br><span class="line"><span class="built_in">print</span> (front_app)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><strong>案例</strong></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> frida</span><br><span class="line">rdev = frida.get_remote_device()</span><br><span class="line"><span class="comment">#获取在前台运行的APP</span></span><br><span class="line">front_app = rdev.get_frontmost_application()</span><br><span class="line"><span class="built_in">print</span> (front_app)</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">res = re.findall(<span class="string">r&quot;pid=(.*?),&quot;</span>,<span class="built_in">str</span>(front_app))</span><br><span class="line"><span class="comment"># 枚举进程中加载指定模块中的导出函数</span></span><br><span class="line">session = rdev.attach(<span class="built_in">int</span>(res[<span class="number">0</span>]))   <span class="comment"># 也可以使用attach(pid)的方式</span></span><br><span class="line">jscode = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Java.perform(function()&#123;</span></span><br><span class="line"><span class="string">    var temp = Java.use(&#x27;com.xunyou.libservice.server.impl.ServerApi&#x27;);</span></span><br><span class="line"><span class="string">    var ServerParams = Java.use(&#x27;com.xunyou.libservice.server.impl.ServerParams&#x27;);</span></span><br><span class="line"><span class="string">        temp.e.overload(&#x27;org.json.JSONObject&#x27;).implementation = function(a)&#123;</span></span><br><span class="line"><span class="string">            var result = this.e(a);  </span></span><br><span class="line"><span class="string">            send(hasmap_parse(result));</span></span><br><span class="line"><span class="string">            return result;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    function hasmap_parse(result)&#123;</span></span><br><span class="line"><span class="string">     var test = result.toString();</span></span><br><span class="line"><span class="string">            var keyset = result.keySet();</span></span><br><span class="line"><span class="string">            var it = keyset.iterator();</span></span><br><span class="line"><span class="string">            while(it.hasNext())&#123;</span></span><br><span class="line"><span class="string">                var keystr = it.next().toString();</span></span><br><span class="line"><span class="string">                var valuestr = result.get(keystr).toString();</span></span><br><span class="line"><span class="string">                test +=keystr+&quot;:&quot;+ valuestr+&quot;;&quot;;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        return test;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;);</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">script = session.create_script(jscode)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">on_message</span>(<span class="params">message, data</span>):</span><br><span class="line">    <span class="built_in">print</span>(message)</span><br><span class="line">script.on(<span class="string">&#x27;message&#x27;</span>, on_message)</span><br><span class="line">script.load()</span><br><span class="line">sys.stdin.read()</span><br></pre></td></tr></table></figure>
-
-<h2 id="脱壳"><a href="#脱壳" class="headerlink" title="脱壳"></a>脱壳</h2><p>使用frida_dexdump 强制脱壳，可脱壳已加固<br><a href="https://github.com/hluwa/FRIDA-DEXDump">下载地址</a></p>
-<p><strong>使用</strong><br>在模拟器上运行app后，执行 python main.py<br>脱壳后的文件将保存到当前目录<br><img src="https://img-blog.csdnimg.cn/0b72dbbf35f946ac87c728e2ec754900.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_14,color_FFFFFF,t_70,g_se,x_16"></p>
-<h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><p>使用jadx-gui查看源代码（拖进去即可）<br><img src="https://img-blog.csdnimg.cn/f0e7f3b82ecf471c881ea461e28c4265.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6buR54yr4LmR,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+    <title>Flask框架中自定义模型类的表名、父类相关问题分析</title>
+    <url>/2020/04/09/python/flask/Flask%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9E%8B%E7%B1%BB%E7%9A%84%E8%A1%A8%E5%90%8D%E3%80%81%E7%88%B6%E7%B1%BB%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h2 id="关于继承父类model，为子model自定义表名的设置"><a href="#关于继承父类model，为子model自定义表名的设置" class="headerlink" title="关于继承父类model，为子model自定义表名的设置"></a>关于继承父类model，为子model自定义表名的设置</h2><h2 id="1、单张表设置表名"><a href="#1、单张表设置表名" class="headerlink" title="1、单张表设置表名"></a>1、单张表设置表名</h2><p>_<em>tablename</em>_ &#x3D; ‘model name’<br>此字段必须是继承自models.Model才可设置。<br><img src="https://img-blog.csdnimg.cn/20200409155726755.png"></p>
+<h2 id="2、有继承关系的表设置表名"><a href="#2、有继承关系的表设置表名" class="headerlink" title="2、有继承关系的表设置表名"></a>2、有继承关系的表设置表名</h2><p>如果其他model继承自BaseModel，那么__tablename__将失效，默认表名为父类表名。<br>要想自定义子类表名，需要在父类model中添加<strong>_<em>abstract</em>_ &#x3D; True</strong>字段。<br><img src="https://img-blog.csdnimg.cn/20200409160213276.png"><br><img src="https://img-blog.csdnimg.cn/20200409160229896.png"><br>这样就可以自定义表名啦。</p>
+<h2 id="3、喜欢的拿走"><a href="#3、喜欢的拿走" class="headerlink" title="3、喜欢的拿走"></a>3、喜欢的拿走</h2><p><img src="https://img-blog.csdnimg.cn/20200409160438194.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70"></p>
 ]]></content>
       <categories>
         <category>python</category>
       </categories>
       <tags>
         <tag>python</tag>
-        <tag>spider</tag>
+        <tag>flask</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>flask migrate创建迁移脚本无效</title>
+    <url>/2020/04/07/python/flask/flask%20migrate%E5%88%9B%E5%BB%BA%E8%BF%81%E7%A7%BB%E8%84%9A%E6%9C%AC%E6%97%A0%E6%95%88/</url>
+    <content><![CDATA[<p>前面的步骤就先不说了，也就是初始化migrate、绑定Manage。<br>1、首先使用init初始化</p>
+<p><img src="https://img-blog.csdnimg.cn/20200407172128417.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtamYx,size_16,color_FFFFFF,t_70"><br>2、生成迁移文件</p>
+<p><img src="https://img-blog.csdnimg.cn/20200407172335172.png"><br>此时可能会出现如图问题，前提是已经创建model。<br>问题所在：创建的model对象系统不知道，没有告诉系统，也就是没有实例化对象。因此需要在views中导入要迁移的model，系统才知道要迁移哪个模板。</p>
+<p>views中导入相应模块<br><img src="https://img-blog.csdnimg.cn/20200407181334290.png"></p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>flask</tag>
       </tags>
   </entry>
 </search>
