@@ -121,3 +121,7 @@ feed:
   content_limit_delim: " "
   order_by: -date
 
+sitemap:
+	path: sitemap.xml
+baidusitemap:
+	path: baidusitemap.xml
