@@ -6,7 +6,7 @@
   <link href="https://ak47dadada.top/atom.xml" rel="self"/>
   
   <link href="https://ak47dadada.top/"/>
-  <updated>2024-02-21T09:33:30.420Z</updated>
+  <updated>2024-02-26T03:04:52.398Z</updated>
   <id>https://ak47dadada.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用python实现一个SCP小工具</title>
+    <link href="https://ak47dadada.top/2024/02/26/python/%E4%BD%BF%E7%94%A8python%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AASCP%E5%B0%8F%E5%B7%A5%E5%85%B7/"/>
+    <id>https://ak47dadada.top/2024/02/26/python/%E4%BD%BF%E7%94%A8python%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AASCP%E5%B0%8F%E5%B7%A5%E5%85%B7/</id>
+    <published>2024-02-26T03:23:11.000Z</published>
+    <updated>2024-02-26T03:04:52.398Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;strong&gt;源码地址：&lt;/strong&gt;&lt;br&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/categories/python/"/>
+    
+    
+    <category term="python" scheme="https://ak47dadada.top/tags/python/"/>
+    
+  </entry>
   
   <entry>
     <title>基于Glue ETL(提取、转换和加载)的serviceless 数据分析——一、Glue创建.</title>
@@ -554,33 +579,6 @@
     <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     <category term="ETL" scheme="https://ak47dadada.top/tags/ETL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Glue连接RedShift的前置条件：创建终端节点</title>
-    <link href="https://ak47dadada.top/2022/08/25/aws/Glue%E8%BF%9E%E6%8E%A5RedShift%E7%9A%84%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%BB%88%E7%AB%AF%E8%8A%82%E7%82%B9/"/>
-    <id>https://ak47dadada.top/2022/08/25/aws/Glue%E8%BF%9E%E6%8E%A5RedShift%E7%9A%84%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%BB%88%E7%AB%AF%E8%8A%82%E7%82%B9/</id>
-    <published>2022-08-25T10:49:36.000Z</published>
-    <updated>2024-02-21T09:54:58.110Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;strong&gt;进入vpc选择终端节点&lt;/strong&gt;&lt;br&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="AWS" scheme="https://ak47dadada.top/categories/AWS/"/>
-    
-    
-    <category term="AWS" scheme="https://ak47dadada.top/tags/AWS/"/>
-    
-    <category term="大数据" scheme="https://ak47dadada.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
